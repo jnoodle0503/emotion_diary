@@ -1,0 +1,58 @@
+/* src/index.css */
+
+/* 1. Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap');
+
+/* 2. CSS Variables for Design System */
+:root {
+  --font-main: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --color-bg: #FBFBFB; /* 따뜻한 느낌의 배경색 */
+  --color-surface: #FFFFFF;
+  --color-primary: #4B8A74; /* 차분한 녹색 */
+  --color-primary-light: #EAF3F0;
+  --color-text-primary: #2C2C2C;
+  --color-text-secondary: #6B6B6B;
+  --color-border: #EAEAEA;
+
+  /* Emotion Colors (lighter shades) */
+  --emotion-joy: #FFECB3; /* 연한 노랑 */
+  --emotion-happiness: #FFCDD2; /* 연한 분홍 */
+  --emotion-excitement: #FFCCBC; /* 연한 주황 */
+  --emotion-calm: #BBDEFB; /* 연한 파랑 */
+  --emotion-sadness: #CFD8DC; /* 연한 회색 파랑 */
+  --emotion-depression: #B0BEC5; /* 중간 회색 */
+  --emotion-anger: #FFCDD2; /* 연한 빨강 */
+  --emotion-anxiety: #E1BEE7; /* 연한 보라 */
+  --emotion-love: #FFCDD2; /* 연한 분홍 */
+  --emotion-surprise: #FFECB3; /* 연한 노랑 */
+  --emotion-boredom: #CFD8DC; /* 연한 회색 파랑 */
+  --emotion-tiredness: #B0BEC5; /* 중간 회색 */
+}
+
+/* 3. Global Style Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  background: none;
+}

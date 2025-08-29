@@ -1,0 +1,132 @@
+/* src/pages/WriteDiary.css */
+
+.write-page-container {
+  max-width: 768px;
+}
+
+.mascot-container {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mascot-prompt {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
+.write-diary-form {
+  background: var(--color-surface);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.form-section label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+/* Emotion Selector */
+.emotion-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+
+.emotion-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 0.5rem; /* 패딩 조정 */
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background-color: var(--color-bg);
+  transition: all 0.2s ease-in-out;
+}
+
+.emotion-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-primary);
+}
+
+.emotion-btn.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.emotion-emoji {
+  font-size: 2.2rem; /* 이모지 크기 조정 */
+}
+
+.emotion-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Text Area */
+.write-diary-form textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.8;
+  resize: vertical;
+  background-color: #fff;
+  color: var(--color-text-primary);
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-btn, .cancel-btn {
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: white;
+}
+.submit-btn:hover { opacity: 0.9; }
+
+.cancel-btn {
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+.cancel-btn:hover { background-color: #e0e0e0; }
+
+@media (max-width: 768px) {
+  .write-diary-form {
+    padding: 1.5rem;
+  }
+  .emotion-selector {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.75rem;
+  }
+  .emotion-emoji {
+    font-size: 1.8rem;
+  }
+}

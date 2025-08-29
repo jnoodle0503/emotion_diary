@@ -1,0 +1,24 @@
+/* src/App.css */
+
+body {
+  margin: 0;
+  background-color: #f8f9fa; /* A soft, neutral background */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #343a40;
+}
+
+main {
+  padding: 1rem;
+}
+
+/* Remove default App container styles if they exist */
+.App {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}

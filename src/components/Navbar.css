@@ -1,0 +1,80 @@
+/* src/components/Navbar.css */
+.navbar {
+  background: var(--color-surface);
+  height: 70px; /* 높이 조정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem; /* 폰트 크기 조정 */
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* 그림자 조정 */
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 24px;
+}
+
+.nav-logo {
+  color: var(--color-text-primary);
+  justify-self: flex-start;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.8rem; /* 폰트 크기 조정 */
+  display: flex;
+  align-items: center;
+  font-weight: 600; /* 폰트 굵기 조정 */
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+}
+
+.nav-item {
+  height: 70px;
+}
+
+.nav-links {
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.nav-links.active {
+  font-weight: 600;
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary); /* 활성 링크 밑줄 색상 */
+}
+
+.nav-links:hover {
+  color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+  }
+  .nav-logo {
+    font-size: 1.4rem;
+  }
+  .nav-links {
+    font-size: 0.9rem;
+    padding: 0 0.75rem;
+  }
+}
