@@ -17,7 +17,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <NavLink to="/" className="nav-logo" onClick={closeMobileMenu}>
-          감정 일기
+          Marden
         </NavLink>
 
         <ul className="nav-menu top-nav">
