@@ -5,6 +5,7 @@ import MyPage from './pages/MyPage';
 import NegativeDiaryPage from './pages/NegativeDiary';
 import EmotionChartPage from './pages/EmotionChart';
 import WriteDiary from './pages/WriteDiary';
+import ErrorPage from './pages/ErrorPage';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
 import './App.css';
@@ -82,7 +83,7 @@ function App() {
             }
           />
           {/* 일치하는 라우트가 없을 경우 기본 페이지로 리디렉션 */}
-          <Route path="*" element={<Navigate to="/calendar" replace />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
     </div>

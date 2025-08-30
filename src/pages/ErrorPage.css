@@ -1,0 +1,83 @@
+/* src/pages/ErrorPage.css */
+
+.error-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--navbar-height)); /* Adjust based on navbar height */
+  text-align: center;
+}
+
+.error-page-container .garden-header {
+  margin-bottom: 2rem;
+}
+
+.error-page-container .greeting h2 {
+  font-size: 2.5rem;
+  color: var(--color-danger);
+  margin-bottom: 0.5rem;
+}
+
+.error-page-container .greeting p {
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+}
+
+.error-content {
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow-elevation-medium);
+  max-width: 500px;
+  width: 100%;
+}
+
+.error-content p {
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.error-home-button {
+  display: inline-block;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.error-home-button:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .error-page-container .garden-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .error-page-container .greeting h2 {
+    font-size: 2rem;
+  }
+
+  .error-page-container .greeting p {
+    font-size: 1rem;
+  }
+
+  .error-content {
+    padding: 1.5rem;
+  }
+
+  .error-content p {
+    font-size: 1em;
+  }
+
+  .error-home-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9em;
+  }
+}
