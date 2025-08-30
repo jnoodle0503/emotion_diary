@@ -110,6 +110,13 @@
 .selected-diary-container h3 {
   font-size: 1.2rem;
   font-weight: 600;
+  margin: 0; /* Remove default margin */
+}
+
+.selected-diary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-border);
@@ -121,19 +128,69 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   margin-bottom: 1rem;
+  display: flex; /* Use flexbox for overall layout */
+  flex-direction: column; /* Stack content and actions vertically */
+  gap: 1rem; /* Space between content and actions */
 }
 
-.diary-item-header {
+.diary-content-section {
+  flex-grow: 1; /* Allow content to take available space */
+  padding-bottom: 1rem; /* Add padding at the bottom */
+  border-bottom: 1px solid var(--color-border); /* Separator line */
+}
+
+.diary-meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 10px;
+  margin-bottom: 1rem; /* More space below emotions */
+}
+
+.diary-content {
+  font-size: 1em;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem; /* Space below content */
+  white-space: pre-wrap;
+}
+
+.diary-actions {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+  padding-top: 1rem; /* Add padding at the top */
+}
+
+.edit-link,
+.delete-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .edit-link {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.edit-link:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.delete-button {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.delete-button:hover {
+  background-color: var(--color-danger);
+  color: var(--color-white);
 }
 
 .no-diary-message {
@@ -148,17 +205,23 @@
   color: var(--color-text-secondary);
 }
 
-.write-new-diary-btn {
+.write-diary-for-day-btn-container {
+  text-align: right; /* Align button to the right within its container */
+  margin: 0; /* Remove default margin */
+}
+
+.write-diary-for-day-btn {
   background-color: var(--color-primary);
   color: #fff;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem; /* Adjust padding for smaller button */
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
   transition: background-color 0.2s;
+  font-size: 0.9rem; /* Adjust font size */
 }
 
-.write-new-diary-btn:hover {
+.write-diary-for-day-btn:hover {
   opacity: 0.9;
 }
 

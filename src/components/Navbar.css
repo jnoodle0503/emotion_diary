@@ -1,25 +1,33 @@
 /* src/components/Navbar.css */
+:root {
+  --navbar-height: 70px;
+  --sidebar-width-desktop: 200px;
+  --sidebar-width-mobile: 250px;
+}
+
 .navbar {
   background: var(--color-surface);
-  height: 70px; /* 높이 조정 */
+  height: var(--navbar-height);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem; /* 폰트 크기 조정 */
+  font-size: 1.1rem;
   position: sticky;
   top: 0;
   z-index: 999;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* 그림자 조정 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%; /* Ensure navbar spans full width */
 }
 
 .navbar-container {
   display: flex;
   justify-content: space-between;
-  height: 70px;
+  height: var(--navbar-height);
   z-index: 1;
   width: 100%;
   max-width: 1100px;
   padding: 0 24px;
+  align-items: center; /* Vertically align items */
 }
 
 .nav-logo {
@@ -27,10 +35,10 @@
   justify-self: flex-start;
   cursor: pointer;
   text-decoration: none;
-  font-size: 1.8rem; /* 폰트 크기 조정 */
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
-  font-weight: 600; /* 폰트 굵기 조정 */
+  font-weight: 600;
 }
 
 .nav-menu {
@@ -38,10 +46,12 @@
   align-items: center;
   list-style: none;
   text-align: center;
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
 }
 
 .nav-item {
-  height: 70px;
+  height: var(--navbar-height);
 }
 
 .nav-links {
@@ -58,23 +68,128 @@
 .nav-links.active {
   font-weight: 600;
   color: var(--color-primary);
-  border-bottom: 3px solid var(--color-primary); /* 활성 링크 밑줄 색상 */
+  border-bottom: 3px solid var(--color-primary);
 }
 
 .nav-links:hover {
   color: var(--color-primary);
 }
 
-/* Responsive */
+/* Hamburger Menu Icon */
+.menu-icon {
+  display: none; /* Hidden by default on desktop */
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--color-text-primary);
+}
+
+/* Sidebar (for mobile and desktop) */
+.sidebar {
+  background: var(--color-surface); /* Less transparent */
+  position: fixed;
+  top: var(--navbar-height);
+  right: 0; /* Position sidebar to the right */
+  height: calc(100vh - var(--navbar-height));
+  width: var(--sidebar-width-desktop);
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease-in-out;
+  z-index: 998;
+  padding-top: 20px;
+  transform: translateX(100%); /* Hidden by default, off-screen to the right */
+}
+
+.sidebar .nav-menu {
+  flex-direction: column;
+  width: 100%;
+}
+
+.sidebar .nav-item {
+  width: 100%;
+  height: auto;
+}
+
+.sidebar .nav-links {
+  padding: 15px 20px;
+  width: 100%;
+  justify-content: flex-start;
+  border-bottom: none; /* Remove bottom border for sidebar links */
+}
+
+.sidebar .nav-links.active {
+  border-left: 4px solid var(--color-primary); /* Active indicator for sidebar */
+  background-color: var(--color-background-light);
+}
+
+/* Mobile Styles */
 @media (max-width: 768px) {
   .navbar-container {
     padding: 0 16px;
+    justify-content: space-between; /* Push logo left, rest right */
   }
+
   .nav-logo {
     font-size: 1.4rem;
+    position: static; /* Allow it to be part of flex flow */
   }
+
+  .top-nav {
+    display: flex; /* Ensure it's flex for horizontal layout */
+    height: 100%; /* Occupy full height of navbar */
+    margin-left: auto; /* Push top-nav to the right */
+  }
+
+  .nav-item {
+    height: 100%; /* Ensure nav items take full height */
+  }
+
   .nav-links {
     font-size: 0.9rem;
-    padding: 0 0.75rem;
+    padding: 0 0.5rem; /* Reduce padding for smaller screens */
+  }
+
+  .menu-icon {
+    display: block; /* Show hamburger icon on mobile */
+    margin-left: 15px; /* Space between top-nav and menu icon */
+  }
+
+  .sidebar {
+    width: var(--sidebar-width-mobile);
+    transform: translateX(100%); /* Hidden by default on mobile, off-screen to the right */
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 769px) {
+  .navbar {
+    justify-content: flex-end; /* Align navbar content to right */
+    padding-right: var(--sidebar-width-desktop); /* Make space for sidebar */
+  }
+
+  .navbar-container {
+    max-width: none; /* Allow navbar content to fill remaining space */
+    justify-content: flex-end; /* Push top nav to right */
+  }
+
+  .nav-logo {
+    position: absolute;
+    left: 24px; /* Position logo within the main content area */
+  }
+
+  .sidebar {
+    transform: translateX(0); /* Always show sidebar on desktop */
+    right: 0; /* Position sidebar on the right for desktop */
+  }
+
+  .top-nav {
+    display: flex; /* Ensure top nav is visible on desktop */
+  }
+
+  .nav-links.active {
+    border-bottom: 3px solid var(--color-primary); /* Keep bottom border for top nav active */
+    border-left: none; /* Remove left border for top nav */
   }
 }

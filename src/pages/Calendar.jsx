@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { supabase } from '../lib/supabase';
+import { supabase, deleteDiaryEntry } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import Mascot from '../components/Mascot';
 import './Pages.css';
@@ -74,6 +74,21 @@ function CalendarPage() {
     setActiveStartDate(activeStartDate);
   };
 
+  const handleDelete = async (id) => {
+    if (window.confirm('정말로 이 일기를 삭제하시겠습니까?')) {
+      try {
+        await deleteDiaryEntry(id);
+        // Update selectedDiaries to remove the deleted entry
+        setSelectedDiaries(prevDiaries => prevDiaries.filter(diary => diary.id !== id));
+        // Also update monthlyDiaries to reflect the change in the calendar view
+        setMonthlyDiaries(prevDiaries => prevDiaries.filter(diary => diary.id !== id));
+        alert('일기가 성공적으로 삭제되었습니다.');
+      } catch (error) {
+        alert('일기 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
       const diaryForDay = monthlyDiaries.find(diary => {
@@ -114,24 +129,37 @@ function CalendarPage() {
       <div className="diary-view-area">
         {selectedDate && (
           <div className="selected-diary-container">
-            <h3>{selectedDate.toLocaleDateString('ko-KR')}</h3>
+            <div className="selected-diary-header">
+              <h3>{selectedDate.toLocaleDateString('ko-KR')}</h3>
+              <div className="write-diary-for-day-btn-container">
+                <Link 
+                  to={`/write?date=${formatDateToYYYYMMDD(selectedDate)}`}
+                  className="write-diary-for-day-btn"
+                >
+                  이 날에 일기 작성하기
+                </Link>
+              </div>
+            </div>
             {selectedDiaries.length > 0 ? (
               selectedDiaries.map(diary => (
                 <div key={diary.id} className="diary-item-display">
-                   <div className="diary-item-header">
+                   <div className="diary-content-section">
                       <div className="diary-meta">
                         {diary.emotion && diary.emotion.map(emo => (
                           <span key={emo} className={`emotion-tag emotion-bg-${emo}`}>{emo}</span>
                         ))}
                       </div>
-                      <Link to={`/write/${diary.id}`} className="edit-link">수정</Link>
+                      <p className="diary-content">{diary.content}</p>
+                      {diary.ai_feedback && (
+                        <div className="ai-feedback">
+                          <p><strong>마음이의 속삭임:</strong> {diary.ai_feedback}</p>
+                        </div>
+                      )}
                    </div>
-                  <p className="diary-content">{diary.content}</p>
-                  {diary.ai_feedback && (
-                    <div className="ai-feedback">
-                      <p><strong>마음이의 속삭임:</strong> {diary.ai_feedback}</p>
-                    </div>
-                  )}
+                   <div className="diary-actions">
+                      <Link to={`/write/${diary.id}`} className="edit-link">수정</Link>
+                      <button onClick={() => handleDelete(diary.id)} className="delete-button">삭제</button>
+                   </div>
                 </div>
               ))
             ) : (
@@ -139,14 +167,6 @@ function CalendarPage() {
                 <p>이 날에는 기록된 마음이 없네요.</p>
               </div>
             )}
-            <div className="write-diary-for-day-btn-container">
-              <Link 
-                to={`/write?date=${formatDateToYYYYMMDD(selectedDate)}`}
-                className="write-diary-for-day-btn"
-              >
-                이 날에 일기 작성하기
-              </Link>
-            </div>
           </div>
         )}
       </div>

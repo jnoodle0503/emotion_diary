@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import CalendarPage from './pages/Calendar';
 import MyPage from './pages/MyPage';
+import NegativeDiaryPage from './pages/NegativeDiary';
+import EmotionChartPage from './pages/EmotionChart';
 import WriteDiary from './pages/WriteDiary';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
@@ -60,6 +62,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/negative-diaries" 
+            element={
+              <ProtectedRoute>
+                <NegativeDiaryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/emotion-chart" 
+            element={
+              <ProtectedRoute>
+                <EmotionChartPage />
               </ProtectedRoute>
             }
           />

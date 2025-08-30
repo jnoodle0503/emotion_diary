@@ -1,0 +1,142 @@
+/* src/pages/EmotionChart.css */
+
+.chart-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-elevation-low);
+}
+
+.chart-controls button {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  display: flex; /* Use flexbox for icon centering */
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-controls button i {
+  font-size: 1.2em; /* Adjust icon size */
+}
+
+.chart-controls button:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.chart-controls span {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.chart-container {
+  background-color: var(--color-white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-elevation-low);
+  max-width: 800px; /* PC max-width */
+  margin: 0 auto 20px auto;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--color-text-secondary);
+  font-size: 1.1em;
+}
+
+.emotion-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  box-shadow: var(--shadow-elevation-low);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.legend-item:hover {
+  background-color: var(--color-background-light);
+}
+
+.legend-item.highlighted {
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+}
+
+.legend-color-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.legend-text {
+  font-size: 0.95em;
+  color: var(--color-text-primary);
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .chart-container {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .chart-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chart-controls button {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+
+  .chart-controls span {
+    font-size: 1em;
+  }
+
+  .emotion-legend {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .legend-item {
+    padding: 6px 10px;
+  }
+
+  .legend-color-box {
+    width: 16px;
+    height: 16px;
+  }
+
+  .legend-text {
+    font-size: 0.9em;
+  }
+}
