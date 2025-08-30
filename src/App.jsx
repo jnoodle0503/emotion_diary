@@ -33,7 +33,7 @@ function App() {
             path="/login" 
             element={session ? <Navigate to="/calendar" replace /> : <Login />}
           />
-          <Route path="/" element={<Navigate to="/calendar" replace />} />
+          <Route path="/" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route 
             path="/calendar"
             element={
