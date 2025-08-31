@@ -41,3 +41,27 @@ export async function getNegativeDiaryEntries(userId, offset, limit) {
   }
   return data;
 }
+
+export async function deleteUserData(userId) {
+  // 1. Delete all diaries for the user
+  const { error: diariesError } = await supabase
+    .from('diaries')
+    .delete()
+    .eq('user_id', userId);
+
+  if (diariesError) {
+    console.error('Error deleting user diaries:', diariesError);
+    throw diariesError;
+  }
+
+  // 2. Delete the user's profile entry
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .delete()
+    .eq('id', userId);
+
+  if (profileError) {
+    console.error('Error deleting user profile:', profileError);
+    throw profileError;
+  }
+}

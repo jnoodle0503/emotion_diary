@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -7,26 +6,65 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null); // New state for profile
   const [loading, setLoading] = useState(true);
 
+  const refreshProfile = async () => {
+    if (!user) return; // Can only refresh if user is logged in
+    setLoading(true); // Set loading while refreshing profile
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('nickname, full_name, avatar_url')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Error refreshing profile:', profileError);
+      setProfile(null);
+    } else {
+      setProfile(profileData);
+    }
+    setLoading(false); // Reset loading
+  };
+
   useEffect(() => {
-    // 현재 로그인 세션을 가져옵니다.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const fetchUserAndProfile = async (currentSession) => {
+      setSession(currentSession);
+      const currentUser = currentSession?.user ?? null;
+      setUser(currentUser);
+
+      if (currentUser) {
+        // Fetch profile data
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('nickname, full_name, avatar_url') // Select nickname and other existing fields
+          .eq('id', currentUser.id)
+          .maybeSingle(); // Changed from .single() to .maybeSingle()
+
+        if (profileError) { // No need to check for PGRST116 with maybeSingle()
+          console.error('Error fetching profile:', profileError);
+          setProfile(null); // Set profile to null on error
+        } else {
+          setProfile(profileData);
+        }
+      } else {
+        setProfile(null); // Clear profile if no user
+      }
       setLoading(false);
+    };
+
+    // Initial session check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      fetchUserAndProfile(session);
     });
 
-    // 인증 상태 변경(로그인, 로그아웃 등)을 감지합니다.
+    // Listen for auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+        fetchUserAndProfile(session);
       }
     );
 
-    // 컴포넌트가 언마운트될 때 리스너를 정리합니다.
     return () => {
       authListener.subscription.unsubscribe();
     };
@@ -35,10 +73,11 @@ export function AuthProvider({ children }) {
   const value = {
     session,
     user,
+    profile,
     signOut: () => supabase.auth.signOut(),
+    refreshProfile, // Expose the new function
   };
 
-  // 로딩 중일 때는 아무것도 렌더링하지 않습니다.
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
@@ -46,7 +85,6 @@ export function AuthProvider({ children }) {
   );
 }
 
-// 다른 컴포넌트에서 쉽게 AuthContext를 사용할 수 있도록 하는 커스텀 훅
 export function useAuth() {
   return useContext(AuthContext);
 }

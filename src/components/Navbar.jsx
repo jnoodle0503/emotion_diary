@@ -39,6 +39,7 @@ function Navbar() {
               새 일기
             </NavLink>
           </li>
+
         </ul>
 
         <div className="menu-icon" onClick={toggleMobileMenu}>
@@ -76,6 +77,7 @@ function Navbar() {
               감정 차트
             </NavLink>
           </li>
+
         </ul>
       </div>
     </nav>

@@ -29,7 +29,7 @@
   background: var(--color-surface);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -99,7 +99,7 @@
   width: 8px;
   border-radius: 50%;
   margin-top: 4px; /* 마커와 숫자 사이 간격 조정 */
-  display: block; 
+  display: block;
 }
 
 /* Diary Display Area */
@@ -120,77 +120,6 @@
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-border);
-}
-
-.diary-item-display {
-  background: var(--color-surface);
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  margin-bottom: 1rem;
-  display: flex; /* Use flexbox for overall layout */
-  flex-direction: column; /* Stack content and actions vertically */
-  gap: 1rem; /* Space between content and actions */
-}
-
-.diary-content-section {
-  flex-grow: 1; /* Allow content to take available space */
-  padding-bottom: 1rem; /* Add padding at the bottom */
-  border-bottom: 1px solid var(--color-border); /* Separator line */
-}
-
-.diary-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1rem; /* More space below emotions */
-}
-
-.diary-content {
-  font-size: 1em;
-  line-height: 1.6;
-  color: var(--color-text-primary);
-  margin-bottom: 1rem; /* Space below content */
-  white-space: pre-wrap;
-}
-
-.diary-actions {
-  display: flex;
-  gap: 10px; /* Space between buttons */
-  justify-content: flex-end; /* Align buttons to the right */
-  padding-top: 1rem; /* Add padding at the top */
-}
-
-.edit-link,
-.delete-button {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.edit-link {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-}
-
-.edit-link:hover {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-}
-
-.delete-button {
-  background-color: var(--color-danger-light);
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-}
-
-.delete-button:hover {
-  background-color: var(--color-danger);
-  color: var(--color-white);
 }
 
 .no-diary-message {
@@ -236,27 +165,83 @@
 }
 
 /* Emotion Background Colors */
-.emotion-bg-기쁨 { background-color: var(--emotion-joy); }
-.emotion-bg-행복 { background-color: var(--emotion-happiness); }
-.emotion-bg-설렘 { background-color: var(--emotion-excitement); }
-.emotion-bg-평온 { background-color: var(--emotion-calm); }
-.emotion-bg-슬픔 { background-color: var(--emotion-sadness); }
-.emotion-bg-우울 { background-color: var(--emotion-depression); }
-.emotion-bg-분노 { background-color: var(--emotion-anger); }
-.emotion-bg-불안 { background-color: var(--emotion-anxiety); }
-.emotion-bg-사랑 { background-color: var(--emotion-love); }
-.emotion-bg-놀람 { background-color: var(--emotion-surprise); }
-.emotion-bg-지루함 { background-color: var(--emotion-boredom); }
-.emotion-bg-피곤함 { background-color: var(--emotion-tiredness); }
+.emotion-bg-기쁨 {
+  background-color: var(--emotion-joy);
+}
+.emotion-bg-행복 {
+  background-color: var(--emotion-happiness);
+}
+.emotion-bg-설렘 {
+  background-color: var(--emotion-excitement);
+}
+.emotion-bg-평온 {
+  background-color: var(--emotion-calm);
+}
+.emotion-bg-슬픔 {
+  background-color: var(--emotion-sadness);
+}
+.emotion-bg-우울 {
+  background-color: var(--emotion-depression);
+}
+.emotion-bg-분노 {
+  background-color: var(--emotion-anger);
+}
+.emotion-bg-불안 {
+  background-color: var(--emotion-anxiety);
+}
+.emotion-bg-사랑 {
+  background-color: var(--emotion-love);
+}
+.emotion-bg-놀람 {
+  background-color: var(--emotion-surprise);
+}
+.emotion-bg-지루함 {
+  background-color: var(--emotion-boredom);
+}
+.emotion-bg-피곤함 {
+  background-color: var(--emotion-tiredness);
+}
 
 /* Responsive */
 @media (max-width: 768px) {
-  .garden-header { flex-direction: column; text-align: center; }
+  .garden-header {
+    flex-direction: column;
+    text-align: center;
+  }
   .react-calendar__tile {
     width: 50px; /* 너비는 유지 */
     aspect-ratio: 1 / 1; /* 가로세로 비율 1:1 강제 */
     padding-top: 0; /* 상단 패딩 제거 */
     font-size: 0.9rem;
   }
-  .diary-marker { margin-top: 2px; height: 6px; width: 6px; }
+  .diary-marker {
+    margin-top: 2px;
+    height: 6px;
+    width: 6px;
+  }
+}
+
+.load-more-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.load-more-btn:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.load-more-btn:focus {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  outline: none; /* Remove default focus outline */
 }

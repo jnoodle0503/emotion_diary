@@ -10,31 +10,11 @@
   box-shadow: var(--shadow-elevation-low);
 }
 
-.negative-diary-list .diary-item-display {
-  display: flex; /* Use flexbox for overall layout */
-  flex-direction: column; /* Stack content and actions vertically */
-  gap: 0.5rem; /* Space between sections */
-  padding: 1.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background-color: var(--color-white);
-  transition: all 0.5s ease-out;
-  opacity: 1;
-  transform: translateX(0);
-}
-
 .negative-diary-list .diary-header-row {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 0.5rem; /* Space below header row */
-}
-
-.negative-diary-list .diary-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 0.5rem; /* Space below emotions */
 }
 
 .negative-diary-list .diary-date {
@@ -48,30 +28,6 @@
   font-size: 0.8em;
   font-weight: bold;
   color: var(--color-white);
-}
-
-.negative-diary-list .diary-content {
-  font-size: 1em;
-  line-height: 1.6;
-  color: var(--color-text-primary);
-  margin-bottom: 0; /* No margin below content if AI feedback follows */
-  white-space: pre-wrap;
-}
-
-.negative-diary-list .ai-feedback {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: var(--color-background-alt);
-  border-left: 4px solid var(--color-primary);
-  border-radius: 4px;
-  font-size: 0.9em;
-  color: var(--color-text-secondary);
-}
-
-.negative-diary-list .diary-actions {
-  /* This div now contains only the checkbox, which is part of diary-header-row */
-  /* So, these styles are no longer directly applicable for layout */
-  display: none; /* Hide this div as its content is moved */
 }
 
 .negative-diary-list .diary-item-display.deleting {

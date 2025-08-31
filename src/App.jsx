@@ -8,31 +8,55 @@ import WriteDiary from './pages/WriteDiary';
 import ErrorPage from './pages/ErrorPage';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
+import NicknameRegistration from './pages/NicknameRegistration';
+import DiaryDetail from './pages/DiaryDetail'; // New import
 import './App.css';
 
 // 로그인한 사용자만 접근할 수 있는 보호된 라우트 컴포넌트
 function ProtectedRoute({ children }) {
-  const { session } = useAuth();
-  // 세션이 없으면 로그인 페이지로 리디렉션합니다.
+  const { session, user, profile, loading: authLoading } = useAuth();
+
+  // If AuthContext is still loading, show a loading message
+  if (authLoading) {
+    return <div className="page-container">사용자 데이터를 불러오는 중...</div>;
+  }
+
+  // If no session, redirect to login
   if (!session) {
     return <Navigate to="/login" replace />;
   }
+
+  // If user is logged in but profile or nickname is missing, redirect to nickname registration
+  // This check should happen *after* authLoading is false, ensuring profile is loaded
+  if (user && (!profile || !profile.nickname)) {
+    // Only redirect if not already on the nickname registration page to avoid infinite loops
+    if (window.location.pathname !== '/register-nickname') {
+      return <Navigate to="/register-nickname" replace />;
+    }
+    // If we are on /register-nickname, let it render its children (NicknameRegistration)
+    return children; 
+  }
+
+  // If all checks pass (session, user, profile, nickname), render children
   return children;
 }
 
 function App() {
-  const { session } = useAuth();
+  const { session, profile } = useAuth();
 
   return (
     <div className="App">
-      {/* 세션이 있을 때만 네비게이션 바를 보여줍니다. */}
-      {session && <Navbar />}
+      {/* 세션이 있고 프로필이 로드되었으며 닉네임이 있을 때만 네비게이션 바를 보여줍니다. */}
+      {(session && profile && profile.nickname) && <Navbar />}
       <main>
         <Routes>
           <Route 
             path="/login" 
             element={session ? <Navigate to="/calendar" replace /> : <Login />}
           />
+          {/* Nickname registration page - NOT protected */}
+          <Route path="/register-nickname" element={<NicknameRegistration />} /> 
+
           <Route path="/" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route 
             path="/calendar"
@@ -55,6 +79,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <WriteDiary />
+              </ProtectedRoute>
+            }
+          />
+          {/* Diary Detail Page */} 
+          <Route 
+            path="/diary/:id"
+            element={
+              <ProtectedRoute>
+                <DiaryDetail />
               </ProtectedRoute>
             }
           />

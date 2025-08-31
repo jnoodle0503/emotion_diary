@@ -1,0 +1,10 @@
+
+/* src/pages/DiaryDetail.css */
+
+.diary-detail-page .garden-header {
+  margin-bottom: 2rem;
+}
+
+.diary-detail-page .diary-item-display {
+  margin-bottom: 0; /* Remove bottom margin if it's the only item */
+}

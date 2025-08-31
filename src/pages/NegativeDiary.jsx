@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase, deleteDiaryEntry } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import Mascot from "../components/Mascot";
+import { truncateText } from "../lib/textUtils"; // New import
 import "./Pages.css";
 import "./NegativeDiary.css"; // New CSS file for this page
 
@@ -176,13 +177,16 @@ function NegativeDiaryPage() {
                   ))}
               </div>
 
-              <p className="diary-content">{diary.content}</p>
+              <p className="diary-content">
+                {truncateText(diary.content, 100)}
+              </p>
 
               {diary.ai_feedback && (
                 <div className="ai-feedback">
-                  <p>
-                    <strong>마음이의 속삭임:</strong> {diary.ai_feedback}
+                  <p className="ai-character-name">
+                    {diary.ai_character_name + "(으)로 부터..." || "AI의 조언"}
                   </p>
+                  <p className="ai-feedback-text">{diary.ai_feedback}</p>
                 </div>
               )}
             </div>
