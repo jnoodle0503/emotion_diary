@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useNavigate
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { supabase, deleteDiaryEntry } from "../lib/supabase";
@@ -12,6 +12,7 @@ import "./Calendar.css";
 const INITIAL_DISPLAY_LIMIT = 5; // 초기 표시 일기 개수
 
 function CalendarPage() {
+  const location = useLocation();
   const { user, profile, loading: authLoading } = useAuth(); // Get profile and authLoading
   const navigate = useNavigate(); // Initialize useNavigate
   const [activeStartDate, setActiveStartDate] = useState(new Date());
@@ -41,6 +42,7 @@ function CalendarPage() {
       setLoading(true);
       const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
       const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      endDate.setHours(23, 59, 59, 999); // 마지막 날의 끝까지 포함
 
       const { data, error } = await supabase
         .from("diaries")
@@ -60,7 +62,7 @@ function CalendarPage() {
     };
 
     fetchDiariesForMonth(activeStartDate);
-  }, [activeStartDate, user, profile]); // Depend on user and profile
+  }, [activeStartDate, user, profile, location.key]); // Depend on user and profile
 
   useEffect(() => {
     if (!selectedDate) {
