@@ -220,6 +220,7 @@ function CalendarPage() {
                     <div className="diary-actions">
                       <button
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
                           navigate(`/write/${diary.id}`);
                         }}
@@ -230,6 +231,7 @@ function CalendarPage() {
                       {/* Changed to button */}
                       <button
                         onClick={(e) => {
+                          e.preventDefault();
                           e.stopPropagation();
                           handleDelete(diary.id);
                         }}
