@@ -11,6 +11,7 @@ import {
 import { truncateText } from "../lib/textUtils"; // Import truncateText
 import "./DemoPage.css";
 import "./Pages.css"; // For common styles like emotion tags
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 import { Bar } from "react-chartjs-2";
 import {
@@ -48,6 +49,7 @@ const EMOTION_COLORS = {
 };
 
 function DemoPage() {
+  const { t } = useTranslation(); // Initialize useTranslation
   // State for Diary Writing section
   const [diaryInput, setDiaryInput] = useState("");
   const [selectedEmotions, setSelectedEmotions] = useState([]);
@@ -96,7 +98,7 @@ function DemoPage() {
   // Handle Get AI Feedback button click
   const handleGetAiFeedback = () => {
     if (diaryInput.trim() === "" || selectedEmotions.length === 0) {
-      alert("일기 내용과 감정을 선택해주세요!");
+      alert(t('demo_alert_select_diary_emotion'));
       return;
     }
     const feedback = generateDummyAiFeedback(diaryInput, selectedEmotions);
@@ -122,7 +124,7 @@ function DemoPage() {
     labels: chartLabels,
     datasets: [
       {
-        label: "감정 횟수",
+        label: t('chart_label_emotion_count'),
         data: chartCounts,
         backgroundColor: chartBackgroundColors,
         borderColor: chartBorderColors,
@@ -156,7 +158,7 @@ function DemoPage() {
       },
       title: {
         display: true,
-        text: `감정 통계 (예시 데이터)`,
+        text: t('chart_title_emotion_stats'),
         font: {
           family: "var(--font-main)",
           size: 18,
@@ -179,7 +181,7 @@ function DemoPage() {
               label += ": ";
             }
             if (context.parsed.y !== null) {
-              label += context.parsed.y + "회";
+              label += context.parsed.y + t('chart_unit_count');
             }
             return label;
           },
@@ -233,32 +235,30 @@ function DemoPage() {
         <div className="mascot-container">
           <Mascot />
         </div>
-        <h1>Marden에 오신 것을 환영합니다!</h1>
-        <p>Marden은 당신의 마음을 기록하고 돌보는 감성 일기 서비스입니다.</p>
-        <p>로그인 없이 핵심 기능을 맛보세요!</p>
+        <h1>{t('welcome_to_marden')}</h1>
+        <p>{t('marden_description_1')}</p>
+        <p>{t('marden_description_2')}</p>
       </header>
 
       {/* Feature 1: Interactive Diary Writing & AI Feedback */}
       <section className="demo-section">
-        <h2>✨ 일기 작성 & AI 피드백</h2>
+        <h2>{t('demo_section_title_diary_ai_feedback')}</h2>
         <p className="section-description">
-          하루의 감정과 생각을 기록해보세요.{" "}
-          <span className="highlight-name">'미래에서 온 로봇'</span>,{" "}
-          <span className="highlight-name">'중세시대 무법자'</span>처럼 매번
-          재미있는 컨셉의 AI 친구가 당신의 이야기에 귀 기울이고 따뜻한 피드백을
-          남겨줍니다.
+          {t('demo_diary_ai_feedback_description_part1')}{" "}
+          <span className="highlight-name">{t('robot_from_future')}</span>,{" "}
+          <span className="highlight-name">{t('medieval_outlaw')}</span>{t('demo_diary_ai_feedback_description_part2')}
         </p>
         <div className="feature-layout">
           <div className="interactive-diary-writer">
             <textarea
               className="fake-textarea"
-              placeholder="오늘의 마음을 기록해보세요..."
+              placeholder={t('demo_diary_placeholder')}
               value={diaryInput}
               onChange={(e) => setDiaryInput(e.target.value)}
             />
             <div className="emotion-selection-area">
               <p>
-                <strong>감정 선택:</strong>
+                <strong>{t('emotion_selection_title')}</strong>
               </p>
               {[
                 "기쁨",
@@ -288,7 +288,7 @@ function DemoPage() {
               className="fake-ai-feedback-btn"
               onClick={handleGetAiFeedback}
             >
-              마음이의 피드백 받기 (체험)
+              {t('get_maumi_feedback')}
             </button>
           </div>
           <div className="feature-image-container">
@@ -297,13 +297,13 @@ function DemoPage() {
             {showAiFeedback && aiFeedback && (
               <div className="fake-ai-feedback ai-feedback">
                 <p className="ai-character-name">
-                  {aiFeedback.ai_character_name}(으)로 부터...
+                  {aiFeedback.ai_character_name}{t('from_ai_character')}
                 </p>
                 <p className="ai-feedback-text">{aiFeedback.ai_feedback}</p>
               </div>
             )}
             <p className="image-caption">
-              직접 일기를 작성하고 AI 피드백을 받아보세요!
+              {t('demo_write_diary_get_feedback')}
             </p>
           </div>
         </div>
@@ -311,9 +311,9 @@ function DemoPage() {
 
       {/* Feature 2: Interactive Calendar View */}
       <section className="demo-section">
-        <h2>📅 마음 달력</h2>
+        <h2>{t('demo_section_title_calendar')}</h2>
         <p className="section-description">
-          달력에서 날짜를 선택하고, 해당 날짜에 기록된 일기들을 확인해보세요.
+          {t('demo_calendar_description')}
         </p>
         <div className="calendar-and-diaries-layout">
           <div className="demo-calendar-container">
@@ -325,7 +325,7 @@ function DemoPage() {
             />
           </div>
           <div className="demo-diaries-for-day">
-            <h3>{selectedDate.toLocaleDateString("ko-KR")}의 일기</h3>
+            <h3>{selectedDate.toLocaleDateString("ko-KR")}{t('demo_diary_of_day')}</h3>
             {diariesForSelectedDay.length > 0 ? (
               diariesForSelectedDay.map((diary) => (
                 <div
@@ -349,7 +349,7 @@ function DemoPage() {
                     {diary.ai_feedback && (
                       <div className="ai-feedback">
                         <p className="ai-character-name">
-                          {diary.ai_character_name} (으)로 부터...
+                          {diary.ai_character_name} {t('from_ai_character')}
                         </p>
                         <p className="ai-feedback-text">{diary.ai_feedback}</p>
                       </div>
@@ -359,7 +359,7 @@ function DemoPage() {
               ))
             ) : (
               <div className="no-diary-message">
-                <p>이 날에는 기록된 일기가 없네요. (예시)</p>
+                <p>{t('demo_no_diary_message')}</p>
               </div>
             )}
           </div>
@@ -368,16 +368,15 @@ function DemoPage() {
 
       {/* Feature 3: Interactive Emotion Chart */}
       <section className="demo-section">
-        <h2>📊 감정 통계</h2>
+        <h2>{t('demo_section_title_emotion_stats')}</h2>
         <p className="section-description">
-          기간별 감정 통계를 통해 자신의 마음 상태를 돌아볼 수 있습니다. (예시
-          데이터)
+          {t('demo_emotion_stats_description')}
         </p>
         <div className="emotion-chart-container">
           {data.datasets[0].data.some((count) => count > 0) ? (
             <Bar data={data} options={options} />
           ) : (
-            <p>표시할 감정 데이터가 없습니다.</p>
+            <p>{t('demo_no_emotion_data')}</p>
           )}
         </div>
 
@@ -399,7 +398,7 @@ function DemoPage() {
                 style={{ backgroundColor: EMOTION_COLORS[emotion] }}
               ></span>
               <span className="legend-text-demo">
-                {emotion} ({dummyEmotions[emotion] || 0}회)
+                {emotion} ({dummyEmotions[emotion] || 0}{t('chart_unit_count')})
               </span>
             </div>
           ))}
@@ -408,15 +407,14 @@ function DemoPage() {
 
       {/* Call to Action */}
       <section className="demo-section demo-cta">
-        <h2>이제, 당신의 마음 정원을 가꿔보세요</h2>
+        <h2>{t('cta_title')}</h2>
         <p>
-          Marden과 함께 매일의 감정을 기록하고, 따뜻한 위로를 받으며 성장하는
-          시간을 가져보세요.
+          {t('cta_description')}
         </p>
         <br />
         <Link to="/login" className="cta-button">
           <Mascot />
-          Marden 시작하기
+          {t('start_marden')}
         </Link>
       </section>
     </div>

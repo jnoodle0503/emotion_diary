@@ -8,6 +8,7 @@ import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils";
 import "./Pages.css";
 import "./Calendar.css";
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const INITIAL_DISPLAY_LIMIT = 5; // 초기 표시 일기 개수
 
@@ -15,6 +16,7 @@ function CalendarPage() {
   const location = useLocation();
   const { user, profile, loading: authLoading } = useAuth(); // Get profile and authLoading
   const navigate = useNavigate(); // Initialize useNavigate
+  const { t } = useTranslation(); // Initialize useTranslation
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [monthlyDiaries, setMonthlyDiaries] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -105,16 +107,16 @@ function CalendarPage() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("정말로 이 일기를 삭제하시겠습니까?")) {
+    if (window.confirm(t('calendar_confirm_delete_diary'))) {
       try {
         await deleteDiaryEntry(id);
         // 삭제된 일기를 상태에서 제거
         setMonthlyDiaries((prevDiaries) =>
           prevDiaries.filter((diary) => diary.id !== id)
         );
-        alert("일기가 성공적으로 삭제되었습니다.");
+        alert(t('calendar_alert_diary_deleted'));
       } catch (error) {
-        alert("일기 삭제에 실패했습니다.");
+        alert(t('calendar_alert_delete_failed'));
       }
     }
   };
@@ -142,12 +144,12 @@ function CalendarPage() {
       <header className="garden-header">
         <Mascot />
         <div className="greeting">
-          <h2>마음 정원</h2>
+          <h2>{t('calendar_garden_title')}</h2>
           <p>
             {profile && profile.nickname
-              ? `안녕하세요, ${profile.nickname}님! `
+              ? t('calendar_greeting_with_name', { nickname: profile.nickname })
               : ""}
-            오늘의 마음은 어땠나요? 차분히 하루를 돌아보세요.
+            {t('calendar_greeting_no_name')}
           </p>
         </div>
       </header>
@@ -175,7 +177,7 @@ function CalendarPage() {
                   to={`/write?date=${formatDateToYYYYMMDD(selectedDate)}`}
                   className="write-diary-for-day-btn"
                 >
-                  이 날에 일기 작성하기
+                  {t('calendar_write_diary_for_day')}
                 </Link>
               </div>
             </div>
@@ -208,8 +210,8 @@ function CalendarPage() {
                       {diary.ai_feedback && (
                         <div className="ai-feedback">
                           <p className="ai-character-name">
-                            {diary.ai_character_name + "(으)로 부터..." ||
-                              "AI의 조언"}
+                            {diary.ai_character_name + t('from_ai_character_suffix') ||
+                              t('ai_advice')}
                           </p>
                           <p className="ai-feedback-text">
                             {diary.ai_feedback}
@@ -226,7 +228,7 @@ function CalendarPage() {
                         }}
                         className="edit-link"
                       >
-                        수정
+                        {t('edit')}
                       </button>{" "}
                       {/* Changed to button */}
                       <button
@@ -237,7 +239,7 @@ function CalendarPage() {
                         }}
                         className="delete-button"
                       >
-                        삭제
+                        {t('delete')}
                       </button>{" "}
                       {/* Stop propagation */}
                     </div>
@@ -246,12 +248,12 @@ function CalendarPage() {
               ))
             ) : (
               <div className="no-diary-message">
-                <p>이 날에는 기록된 마음이 없네요.</p>
+                <p>{t('calendar_no_diary_message')}</p>
               </div>
             )}
             {hasMoreDiaries && (
               <button onClick={handleLoadMore} className="load-more-btn">
-                더 보기
+                {t('load_more')}
               </button>
             )}
           </div>

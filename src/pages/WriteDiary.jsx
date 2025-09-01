@@ -7,6 +7,7 @@ import FeedbackModal, { getRandomCharacter } from '../components/FeedbackModal';
 import { getAIFeedback } from '../lib/gemini';
 import './Pages.css';
 import './WriteDiary.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const EMOTIONS = {
   '기쁨': '😊', '행복': '🥰', '설렘': '🤩', '평온': '😌', 
@@ -15,6 +16,7 @@ const EMOTIONS = {
 };
 
 function WriteDiary() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { user } = useAuth();
   const { id: diaryId } = useParams();
   const navigate = useNavigate();
@@ -80,7 +82,7 @@ function WriteDiary() {
 
     if (error) {
       console.error('Error saving diary:', error);
-      alert('일기 저장 중 오류가 발생했습니다.');
+      alert(t('write_diary_alert_save_failed'));
     } else {
       navigate('/calendar');
     }
@@ -89,7 +91,7 @@ function WriteDiary() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content.trim() || selectedEmotions.length === 0) {
-      alert('일기 내용과 감정을 하나 이상 선택해주세요.');
+      alert(t('write_diary_alert_enter_content_emotion'));
       return;
     }
 
@@ -121,7 +123,7 @@ function WriteDiary() {
   };
 
   if (loading) {
-    return <div className="page-container">Loading...</div>;
+    return <div className="page-container">{t('loading')}</div>;
   }
 
   return (
@@ -130,13 +132,13 @@ function WriteDiary() {
         <header className="garden-header">
           <Mascot />
           <div className="greeting">
-            <h2>마음 정원</h2>
-            <p>오늘의 마음은 어떤가요? 편안하게 기록해보세요.</p>
+            <h2>{t('write_diary_title')}</h2>
+            <p>{t('write_diary_description')}</p>
           </div>
         </header>
         <form onSubmit={handleSubmit} className="write-diary-form">
           <div className="form-section">
-            <label>오늘 어떤 감정을 느꼈나요?</label>
+            <label>{t('write_diary_emotion_question')}</label>
             <div className="emotion-selector">
               {Object.entries(EMOTIONS).map(([name, emoji]) => (
                 <button 
@@ -152,17 +154,17 @@ function WriteDiary() {
             </div>
           </div>
           <div className="form-section">
-            <label>어떤 일이 있었나요?</label>
+            <label>{t('write_diary_content_question')}</label>
             <textarea 
-              placeholder="이곳에 편안하게 이야기를 적어주세요."
+              placeholder={t('write_diary_content_placeholder')}
               value={content} 
               onChange={(e) => setContent(e.target.value)}
             />
           </div>
           <div className="form-actions">
-            <button type="button" onClick={() => navigate('/calendar')} className="cancel-btn">취소</button>
+            <button type="button" onClick={() => navigate('/calendar')} className="cancel-btn">{t('cancel')}</button>
             <button type="submit" className="submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? 'AI가 일기를 읽는 중...' : (isEditing ? '수정 완료' : '기록하기')}
+              {isSubmitting ? t('write_diary_ai_reading') : (isEditing ? t('write_diary_edit_complete') : t('write_diary_record'))}
             </button>
           </div>
         </form>

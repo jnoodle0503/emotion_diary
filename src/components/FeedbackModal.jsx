@@ -1,6 +1,7 @@
 
 import React from 'react';
 import './FeedbackModal.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const allCharacterNames = [
   '중세시대의 어느 나그네',
@@ -52,6 +53,7 @@ export const getRandomCharacter = () => {
 };
 
 const FeedbackModal = ({ feedback, characterName, onLike, onDislike, show }) => {
+  const { t } = useTranslation(); // Initialize useTranslation
   if (!show) {
     return null;
   }
@@ -62,8 +64,8 @@ const FeedbackModal = ({ feedback, characterName, onLike, onDislike, show }) => 
         <p className="character-name">- {characterName} -</p>
         <p className="feedback-text">{feedback}</p>
         <div className="modal-actions">
-          <button className="btn btn-dislike" onClick={onDislike}>싫어요</button>
-          <button className="btn btn-like" onClick={onLike}>좋아요</button>
+          <button className="btn btn-dislike" onClick={onDislike}>{t('dislike')}</button>
+          <button className="btn btn-like" onClick={onLike}>{t('like')}</button>
         </div>
       </div>
     </div>

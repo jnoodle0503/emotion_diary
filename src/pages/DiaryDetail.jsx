@@ -5,8 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import Mascot from "../components/Mascot";
 import "./Pages.css";
 import "./DiaryDetail.css"; // New CSS file for this page
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function DiaryDetail() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,10 +32,10 @@ function DiaryDetail() {
 
       if (error) {
         console.error("Error fetching diary:", error);
-        setError("일기를 불러오는 중 오류가 발생했습니다.");
+        setError(t('diary_detail_error_fetching_diary'));
         setDiary(null);
       } else if (!data) {
-        setError("일기를 찾을 수 없습니다.");
+        setError(t('diary_detail_diary_not_found'));
         setDiary(null);
       } else {
         setDiary(data);
@@ -42,23 +44,23 @@ function DiaryDetail() {
     };
 
     fetchDiary();
-  }, [id, user, navigate]);
+  }, [id, user, navigate, t]); // Added t to dependency array
 
   const handleDelete = async () => {
-    if (window.confirm("정말로 이 일기를 삭제하시겠습니까?")) {
+    if (window.confirm(t('diary_detail_confirm_delete'))) {
       try {
         await deleteDiaryEntry(diary.id);
-        alert("일기가 성공적으로 삭제되었습니다.");
+        alert(t('diary_detail_alert_deleted'));
         navigate("/calendar"); // Go back to calendar after deletion
       } catch (error) {
         console.error("Error deleting diary:", error);
-        alert("일기 삭제에 실패했습니다.");
+        alert(t('diary_detail_alert_delete_failed'));
       }
     }
   };
 
   if (loading) {
-    return <div className="page-container">일기를 불러오는 중...</div>;
+    return <div className="page-container">{t('diary_detail_loading')}</div>;
   }
 
   if (error) {
@@ -66,7 +68,7 @@ function DiaryDetail() {
   }
 
   if (!diary) {
-    return <div className="page-container">일기를 찾을 수 없습니다.</div>; // Should be caught by error state, but as a fallback
+    return <div className="page-container">{t('diary_detail_diary_not_found_fallback')}</div>; // Should be caught by error state, but as a fallback
   }
 
   return (
@@ -74,7 +76,7 @@ function DiaryDetail() {
       <header className="garden-header">
         <Mascot />
         <div className="greeting">
-          <h2>일기 상세 보기</h2>
+          <h2>{t('diary_detail_title')}</h2>
           <p>{new Date(diary.created_at).toLocaleDateString("ko-KR")}</p>
         </div>
       </header>
@@ -95,7 +97,7 @@ function DiaryDetail() {
           {diary.ai_feedback && (
             <div className="ai-feedback">
               <p className="ai-character-name">
-                {diary.ai_character_name + "(으)로 부터..." || "AI의 조언"}
+                {diary.ai_character_name + t('from_ai_character_suffix') || t('ai_advice')}
               </p>
               <p className="ai-feedback-text">{diary.ai_feedback}</p>
             </div>
@@ -103,10 +105,10 @@ function DiaryDetail() {
         </div>
         <div className="diary-actions">
           <Link to={`/write/${diary.id}`} className="edit-link">
-            수정
+            {t('edit')}
           </Link>
           <button onClick={handleDelete} className="delete-button">
-            삭제
+            {t('delete')}
           </button>
         </div>
       </div>

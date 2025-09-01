@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function Navbar() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -27,7 +29,7 @@ function Navbar() {
               className={({ isActive }) => isActive ? 'nav-links active' : 'nav-links'}
               onClick={closeMobileMenu}
             >
-              월별 보기
+              {t('navbar_monthly_view')}
             </NavLink>
           </li>
           <li className="nav-item">
@@ -36,7 +38,7 @@ function Navbar() {
               className={({ isActive }) => isActive ? 'nav-links active' : 'nav-links'}
               onClick={closeMobileMenu}
             >
-              새 일기
+              {t('navbar_new_diary')}
             </NavLink>
           </li>
 
@@ -56,7 +58,7 @@ function Navbar() {
               className={({ isActive }) => isActive ? 'nav-links active' : 'nav-links'}
               onClick={closeMobileMenu}
             >
-              마이페이지
+              {t('navbar_mypage')}
             </NavLink>
           </li>
           <li className="nav-item">
@@ -65,7 +67,7 @@ function Navbar() {
               className={({ isActive }) => isActive ? 'nav-links active' : 'nav-links'}
               onClick={closeMobileMenu}
             >
-              마음의 그림자
+              {t('navbar_shadows_of_mind')}
             </NavLink>
           </li>
           <li className="nav-item">
@@ -74,7 +76,7 @@ function Navbar() {
               className={({ isActive }) => isActive ? 'nav-links active' : 'nav-links'}
               onClick={closeMobileMenu}
             >
-              감정 차트
+              {t('navbar_emotion_chart')}
             </NavLink>
           </li>
 

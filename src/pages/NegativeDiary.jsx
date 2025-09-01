@@ -5,11 +5,13 @@ import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils"; // New import
 import "./Pages.css";
 import "./NegativeDiary.css"; // New CSS file for this page
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 const NEGATIVE_EMOTIONS = ["슬픔", "우울", "분노", "불안", "지루함", "피곤함"];
 const PAGE_SIZE = 10;
 
 function NegativeDiaryPage() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { user } = useAuth();
   const [diaries, setDiaries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,13 +85,13 @@ function NegativeDiaryPage() {
 
   const handleDeleteSelected = async () => {
     if (selectedDiaries.length === 0) {
-      alert("삭제할 일기를 선택해주세요.");
+      alert(t('negative_diary_alert_select_diary_to_delete'));
       return;
     }
 
     if (
       window.confirm(
-        `선택된 ${selectedDiaries.length}개의 일기를 정말로 삭제하시겠습니까?`
+        t('negative_diary_confirm_delete_selected', { count: selectedDiaries.length })
       )
     ) {
       setDeletingIds(selectedDiaries);
@@ -108,7 +110,7 @@ function NegativeDiaryPage() {
           setDeletingIds([]);
         } catch (error) {
           console.error("Error deleting selected diaries:", error);
-          alert("일기 삭제에 실패했습니다.");
+          alert(t('negative_diary_alert_delete_failed'));
           setDeletingIds([]); // Reset deleting state on error
         } finally {
           setShowTrashCanAnimation(false); // Hide trash can after deletion
@@ -122,15 +124,15 @@ function NegativeDiaryPage() {
       <header className="garden-header">
         <Mascot />
         <div className="greeting">
-          <h2>마음의 그림자</h2>
-          <p>당신의 마음을 힘들게 했던 기록들을 마주하고 정리해보세요.</p>
+          <h2>{t('negative_diary_title')}</h2>
+          <p>{t('negative_diary_description')}</p>
         </div>
       </header>
 
       <div className="negative-diary-list">
         {diaries.length === 0 && !loading && !hasMore ? (
           <p className="no-diary-message">
-            아직 부정적인 감정의 일기가 없네요.
+            {t('negative_diary_no_negative_diaries')}
           </p>
         ) : (
           diaries.map((diary) => (
@@ -184,7 +186,7 @@ function NegativeDiaryPage() {
               {diary.ai_feedback && (
                 <div className="ai-feedback">
                   <p className="ai-character-name">
-                    {diary.ai_character_name + "(으)로 부터..." || "AI의 조언"}
+                    {diary.ai_character_name + t('from_ai_character_suffix') || t('ai_advice')}
                   </p>
                   <p className="ai-feedback-text">{diary.ai_feedback}</p>
                 </div>
@@ -192,9 +194,9 @@ function NegativeDiaryPage() {
             </div>
           ))
         )}
-        {loading && <p className="loading-message">불러오는 중...</p>}
+        {loading && <p className="loading-message">{t('loading_message')}</p>}
         {!hasMore && diaries.length > 0 && (
-          <p className="end-message">더 이상 일기가 없습니다.</p>
+          <p className="end-message">{t('end_of_diaries_message')}</p>
         )}
       </div>
 
@@ -205,7 +207,7 @@ function NegativeDiaryPage() {
             className="delete-selected-btn"
             disabled={selectedDiaries.length === 0}
           >
-            선택된 일기 삭제 ({selectedDiaries.length})
+            {t('delete_selected_diaries', { count: selectedDiaries.length })}
           </button>
         </div>
       )}

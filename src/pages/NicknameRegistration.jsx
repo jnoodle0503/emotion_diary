@@ -5,10 +5,12 @@ import { useAuth } from '../context/AuthContext';
 import Mascot from '../components/Mascot';
 import './Pages.css'; // For page-container
 import './NicknameRegistration.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function NicknameRegistration() {
   const { user, profile, refreshProfile } = useAuth(); // Get profile and refreshProfile
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Initialize useTranslation
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,7 +38,7 @@ function NicknameRegistration() {
     console.log('handleSubmit called'); // Log 1
 
     if (!nickname.trim()) {
-      setError('닉네임을 입력해주세요.');
+      setError(t('nickname_registration_alert_enter_nickname'));
       console.log('Nickname is empty'); // Log 2
       return;
     }
@@ -77,7 +79,7 @@ function NicknameRegistration() {
     } catch (err) {
       console.log('Caught error during save:', err); // Log 9
       console.error('Error saving nickname:', err);
-      setError('닉네임 저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+      setError(t('nickname_registration_alert_save_failed'));
     } finally {
       setLoading(false);
       console.log('Loading state set to false'); // Log 10
@@ -85,27 +87,27 @@ function NicknameRegistration() {
   };
 
   if (!user) {
-    return <div className="page-container">로그인 중...</div>; // Or a proper loading/redirect message
+    return <div className="page-container">{t('nickname_registration_loading_login')}</div>; // Or a proper loading/redirect message
   }
 
   return (
     <div className="page-container nickname-registration-page">
       <div className="mascot-container">
         <Mascot />
-        <h1 className="page-title">환영합니다!</h1>
-        <p className="page-subtitle">서비스 이용을 위해 닉네임을 설정해주세요.</p>
+        <h1 className="page-title">{t('nickname_registration_welcome_title')}</h1>
+        <p className="page-subtitle">{t('nickname_registration_subtitle')}</p>
       </div>
       <form onSubmit={handleSubmit} className="nickname-form">
         <input
           type="text"
-          placeholder="닉네임을 입력하세요"
+          placeholder={t('nickname_registration_placeholder')}
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           disabled={loading}
         />
         {error && <p className="error-message">{error}</p>}
         <button type="submit" disabled={loading}>
-          {loading ? '저장 중...' : '닉네임 설정'}
+          {loading ? t('nickname_registration_saving') : t('nickname_registration_set_nickname')}
         </button>
       </form>
     </div>

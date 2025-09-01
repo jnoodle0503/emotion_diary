@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import Mascot from '../components/Mascot';
 import './Pages.css';
 import './EmotionChart.css';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -25,6 +26,7 @@ const EMOTION_COLORS = {
 };
 
 function EmotionChartPage() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { user } = useAuth();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [emotionData, setEmotionData] = useState({});
@@ -91,7 +93,10 @@ function EmotionChartPage() {
     });
   };
 
-  const chartLabels = Object.keys(EMOTION_COLORS);
+  // Get translated emotion labels
+  const translatedEmotionLabels = Object.keys(EMOTION_COLORS).map(emotion => t(`emotion_${emotion}`));
+  const chartLabels = Object.keys(EMOTION_COLORS); // Keep original keys for data mapping
+
   const chartCounts = chartLabels.map(label => emotionData[label] || 0);
   const chartBackgroundColors = chartLabels.map(label => 
     highlightedEmotion && highlightedEmotion !== label 
@@ -105,10 +110,10 @@ function EmotionChartPage() {
   );
 
   const data = {
-    labels: chartLabels,
+    labels: translatedEmotionLabels, // Use translated labels for chart display
     datasets: [
       {
-        label: '감정 횟수',
+        label: t('chart_label_emotion_count'),
         data: chartCounts,
         backgroundColor: chartBackgroundColors,
         borderColor: chartBorderColors,
@@ -134,13 +139,14 @@ function EmotionChartPage() {
           boxHeight: 10,
         },
         onClick: (e, legendItem, legend) => {
-          const emotionName = legendItem.text;
-          setHighlightedEmotion(prev => (prev === emotionName ? null : emotionName));
+          // Find the original emotion name from the translated one
+          const originalEmotionName = Object.keys(EMOTION_COLORS).find(key => t(`emotion_${key}`) === legendItem.text);
+          setHighlightedEmotion(prev => (prev === originalEmotionName ? null : originalEmotionName));
         },
       },
       title: {
         display: true,
-        text: `${currentMonth.getFullYear()}년 ${currentMonth.getMonth() + 1}월 감정 분석`,
+        text: t('emotion_chart_title_month_analysis', { year: currentMonth.getFullYear(), month: currentMonth.getMonth() + 1 }),
         font: {
           family: 'var(--font-main)',
           size: chartTitleFontSize,
@@ -163,7 +169,7 @@ function EmotionChartPage() {
               label += ': ';
             }
             if (context.parsed.y !== null) {
-              label += context.parsed.y + '회';
+              label += context.parsed.y + t('chart_unit_count');
             }
             return label;
           }
@@ -183,7 +189,8 @@ function EmotionChartPage() {
           },
           color: 'var(--color-text-secondary)',
           callback: function(value, index, ticks) {
-            return chartLabels[index];
+            // Use translated labels for x-axis ticks
+            return translatedEmotionLabels[index];
           }
         },
         barPercentage: 0.8, // Adjust bar width
@@ -210,7 +217,7 @@ function EmotionChartPage() {
   };
 
   if (loading) {
-    return <div className="page-container">Loading chart data...</div>;
+    return <div className="page-container">{t('loading_chart_data')}</div>;
   }
 
   return (
@@ -218,14 +225,14 @@ function EmotionChartPage() {
       <header className="garden-header">
         <Mascot />
         <div className="greeting">
-          <h2>감정 차트</h2>
-          <p>월별 감정 변화를 한눈에 확인해보세요.</p>
+          <h2>{t('emotion_chart_title')}</h2>
+          <p>{t('emotion_chart_description')}</p>
         </div>
       </header>
 
       <div className="chart-controls">
         <button onClick={() => handleMonthChange(-1)}><i className="fas fa-chevron-left"></i></button>
-        <span>{currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월</span>
+        <span>{currentMonth.getFullYear()}{t('year')} {currentMonth.getMonth() + 1}{t('month')}</span>
         <button onClick={() => handleMonthChange(1)}><i className="fas fa-chevron-right"></i></button>
       </div>
 
@@ -233,7 +240,7 @@ function EmotionChartPage() {
         {Object.keys(emotionData).length > 0 ? (
           <Bar data={data} options={options} />
         ) : (
-          <p className="no-data-message">선택된 달에 기록된 감정이 없습니다.</p>
+          <p className="no-data-message">{t('no_emotion_data_for_month')}</p>
         )}
       </div>
 
@@ -245,7 +252,7 @@ function EmotionChartPage() {
             onClick={() => setHighlightedEmotion(prev => (prev === emotion ? null : emotion))}
           >
             <span className="legend-color-box" style={{ backgroundColor: EMOTION_COLORS[emotion] }}></span>
-            <span className="legend-text">{emotion} ({emotionData[emotion] || 0}회)</span>
+            <span className="legend-text">{t(`emotion_${emotion}`)} ({emotionData[emotion] || 0}{t('chart_unit_count')})</span>
           </div>
         ))}
       </div>
