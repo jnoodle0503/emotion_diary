@@ -74,7 +74,16 @@ export function AuthProvider({ children }) {
     session,
     user,
     profile,
-    signOut: () => supabase.auth.signOut(),
+    signOut: async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        // This error is often due to an expired token or network issue.
+        // The client-side session is cleared by the library regardless.
+        // We log it for debugging but don't need to show it to the user.
+        console.error('Error during sign out:', error.message);
+      }
+      // onAuthStateChange will handle the UI update.
+    },
     refreshProfile, // Expose the new function
   };
 

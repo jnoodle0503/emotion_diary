@@ -7,6 +7,7 @@ import EmotionChartPage from './pages/EmotionChart';
 import WriteDiary from './pages/WriteDiary';
 import ErrorPage from './pages/ErrorPage';
 import Login from './pages/Login';
+import DemoPage from './pages/DemoPage'; // Import DemoPage
 import Navbar from './components/Navbar';
 import NicknameRegistration from './pages/NicknameRegistration';
 import DiaryDetail from './pages/DiaryDetail'; // New import
@@ -50,6 +51,7 @@ function App() {
       {(session && profile && profile.nickname) && <Navbar />}
       <main>
         <Routes>
+          <Route path="/demo" element={<DemoPage />} />
           <Route 
             path="/login" 
             element={session ? <Navigate to="/calendar" replace /> : <Login />}
