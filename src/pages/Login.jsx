@@ -2,6 +2,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../lib/supabase";
 import Mascot from "../components/Mascot"; // "마음이" 캐릭터 import
+import { BASE_URL } from "../lib/domain";
 
 function Login() {
   // Supabase Auth UI 테마 커스터마이징
@@ -97,6 +98,10 @@ function Login() {
           appearance={{ theme: customTheme }}
           providers={["google"]}
           onlyThirdPartyProviders={true}
+          redirectTo={BASE_URL}
+          queryParams={{
+            prompt: 'select_account',
+          }}
           localization={{
             variables: {
               sign_in: {
