@@ -48,12 +48,12 @@
 }
 
 /* New styles for language setting */
-.language-setting-item {
-  justify-content: space-between; /* Distribute items with space between them */
+.language-setting-item .menu-text {
+  margin-right: 16px;
 }
 
 .language-select {
-  padding: 8px 12px;
+  padding: 8px 30px 8px 12px; /* Increased right padding to make space for the arrow */
   border: 1px solid var(--color-border);
   border-radius: 8px;
   background-color: var(--color-background);
@@ -61,9 +61,9 @@
   font-size: 1em;
   cursor: pointer;
   appearance: none; /* Remove default select arrow */
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.9-3-10.9%2C0L5.4%2C197.3c-3%2C3-3%2C7.9%2C0%2C10.9l10.9%2C10.9c3%2C3%2C7.9%2C3%2C10.9%2C0l117.6-117.6c3-3%2C7.9-3%2C10.9%2C0l117.6%2C117.6c3%2C3%2C7.9%2C3%2C10.9%2C0l10.9-10.9C290%2C205.2%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.9-3-10.9%2C0L5.4%2C197.3c-3%2C3-3%2C7.9%2C0%2C10.9l10.9%2C10.9c3%2C3%2C7.9%2C3%2C10.9%2C0l117.6-117.6c3-3%2C7.9-3%2C10.9%2C0l117.6%2C117.6c3%2C3%2C7.9%2C3%2C10.9%2C0l10.9-10.9C290%2C205.2%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E"); /* Custom arrow */
   background-repeat: no-repeat;
-  background-position: right 12px top 50%;
+  background-position: right 12px center; /* Center vertically */
   background-size: 12px auto;
 }
 
