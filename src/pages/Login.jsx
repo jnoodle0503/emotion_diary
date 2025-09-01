@@ -3,6 +3,8 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../lib/supabase";
 import Mascot from "../components/Mascot"; // "마음이" 캐릭터 import
 import { BASE_URL } from "../lib/domain";
+import { Link } from "react-router-dom"; // Import Link
+import "./Login.css"; // Import Login.css
 
 function Login() {
   // Supabase Auth UI 테마 커스터마이징
@@ -92,6 +94,10 @@ function Login() {
           </div>
         </div>
       </div>
+      <Link to="/demo" className="cta-button login-demo-button">
+        <Mascot />
+        데모 체험하기
+      </Link>
       <div className="auth-ui-container">
         <Auth
           supabaseClient={supabase}

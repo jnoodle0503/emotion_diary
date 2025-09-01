@@ -1,6 +1,6 @@
 .demo-page-container {
   padding: 2rem;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   color: var(--color-text-primary);
 }
@@ -42,25 +42,27 @@
   border-bottom: 2px solid var(--color-primary-light);
 }
 
-.feature-layout {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+.section-description {
+  text-align: center;
+  margin: -1rem 0 2rem 0;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
 }
 
-.fake-diary-writer {
+.highlight-name {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+/* Interactive Diary Writer */
+.interactive-diary-writer {
   flex: 1;
   background-color: var(--color-background);
   padding: 1.5rem;
   border-radius: 8px;
 }
 
-.feature-image-container {
-  flex: 1;
-  text-align: center;
-}
-
-.fake-textarea {
+.interactive-diary-writer textarea {
   width: 100%;
   min-height: 150px;
   padding: 1rem;
@@ -70,16 +72,76 @@
   color: var(--color-text-primary);
   font-size: 1rem;
   line-height: 1.6;
-  resize: none;
+  resize: vertical; /* Allow vertical resizing */
+  margin-bottom: 1rem;
 }
 
-.fake-emotions {
-  margin: 1rem 0;
+.emotion-selection-area {
+  margin-bottom: 1rem;
 }
 
-.fake-emotions .emotion-tag {
+.emotion-selection-area p {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.emotion-selection-area .emotion-tag {
+  cursor: pointer;
   margin-right: 0.5rem;
-  cursor: default;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease-in-out;
+}
+
+.emotion-selection-area .emotion-tag.emotion-bg-기쁨 {
+  background-color: #ffd700;
+  color: #333;
+  border-color: #ffd700;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-슬픔 {
+  background-color: #add8e6;
+  color: #333;
+  border-color: #add8e6;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-분노 {
+  background-color: #ff6347;
+  color: white;
+  border-color: #ff6347;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-불안 {
+  background-color: #daa520;
+  color: white;
+  border-color: #daa520;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-설렘 {
+  background-color: #ffb6c1;
+  color: #333;
+  border-color: #ffb6c1;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-평온 {
+  background-color: #90ee90;
+  color: #333;
+  border-color: #90ee90;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-피곤함 {
+  background-color: #d3d3d3;
+  color: #333;
+  border-color: #d3d3d3;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-우울 {
+  background-color: #6a5acd;
+  color: white;
+  border-color: #6a5acd;
+}
+.emotion-selection-area .emotion-tag.emotion-bg-지루함 {
+  background-color: #b0c4de;
+  color: #333;
+  border-color: #b0c4de;
 }
 
 .fake-ai-feedback-btn {
@@ -93,10 +155,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
-}
-
-.fake-ai-feedback-btn:hover {
-  background-color: var(--color-primary-dark);
+  margin-top: 1rem;
 }
 
 .fake-ai-feedback {
@@ -104,16 +163,184 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
-.feature-image-container-full {
+/* Calendar and Diaries Layout */
+.calendar-and-diaries-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start; /* Align items to the top */
+}
+
+.demo-calendar-container {
+  flex: 0 0 300px; /* Fixed width for calendar */
+  max-width: 100%;
+}
+
+.demo-diaries-for-day {
+  flex: 1;
+  background-color: var(--color-background);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.demo-diaries-for-day h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.demo-diary-item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.demo-diary-item .diary-meta {
+  margin-bottom: 0.5rem;
+}
+
+.demo-diary-item .diary-content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.demo-diary-item .ai-feedback {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+.no-diary-message {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 2rem;
+  border: 1px dashed var(--color-border);
+  border-radius: 8px;
+}
+
+/* Emotion Chart */
+.emotion-chart-container {
+  background-color: var(
+    --color-surface
+  ); /* Changed from background to surface */
+  padding: 20px; /* Increased padding */
+  border-radius: 10px; /* Increased border-radius */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Consistent shadow */
+  margin: 0 auto; /* Center the chart */
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.chart-bar-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem; /* Adjusted margin */
+  position: relative;
+}
+
+.chart-label {
+  flex: 0 0 120px; /* Increased width for labels */
+  font-weight: bold;
+  color: var(--color-text-primary);
+  text-align: right;
+  padding-right: 1.5rem; /* Increased space */
+  font-size: 0.95rem;
+}
+
+.chart-bar {
+  flex: 1;
+  height: 28px; /* Increased height */
+  background-color: var(--color-primary-light);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-value {
+  color: white; /* Value text color */
+  font-weight: bold;
+  font-size: 1rem; /* Increased font size */
+  position: absolute;
+  right: 0.8rem; /* Adjusted position */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow for visibility */
+  z-index: 1; /* Ensure value is above bar fill */
+}
+
+/* Emotion Legend (simplified) */
+.emotion-legend-demo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: var(--color-surface); /* Changed from surface */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Consistent shadow */
+}
+
+.legend-item-demo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.legend-item-demo:hover {
+  background-color: var(--color-background-light);
+}
+
+.legend-item-demo.highlighted {
+  background-color: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+}
+
+.legend-color-box-demo {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.legend-text-demo {
+  font-size: 0.95em;
+  color: var(--color-text-primary);
+}
+
+/* General layout adjustments */
+.feature-layout {
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
+}
+
+.feature-image-container {
+  flex: 1;
   text-align: center;
 }
 
-.feature-image-container img,
-.feature-image-container-full img {
+.feature-image-container img {
   max-width: 100%;
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .image-caption {
@@ -121,6 +348,9 @@
   color: var(--color-text-secondary);
   font-style: italic;
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .demo-cta {
@@ -132,29 +362,160 @@
 }
 
 .cta-button {
-  background-color: var(--color-accent);
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
+  background-color: white;
+  color: var(--color-primary);
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--color-primary);
   border-radius: 8px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cta-button svg {
+  width: 24px;
+  height: 24px;
 }
 
 .cta-button:hover {
-  background-color: #ff5c5c; /* A slightly darker accent */
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.cta-button:hover svg path {
+  fill: white;
+}
+
+.cta-button:hover svg rect {
+  fill: #d2b48c;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .feature-layout {
+  .demo-page-container {
+    padding: 1rem; /* Reduced padding for mobile */
+  }
+  .demo-header h1 {
+    font-size: 2rem; /* Adjust header font size */
+  }
+  .demo-header p {
+    font-size: 1rem; /* Adjust header paragraph font size */
+  }
+  .demo-section {
+    padding: 1.5rem; /* Adjust section padding */
+    margin-bottom: 2rem; /* Adjust section margin */
+  }
+  .demo-section h2 {
+    font-size: 1.5rem; /* Adjust section title font size */
+  }
+  .section-description {
+    font-size: 1rem; /* Adjust description font size */
+  }
+
+  .feature-layout,
+  .calendar-and-diaries-layout {
     flex-direction: column;
+  }
+  .demo-calendar-container {
+    flex: none;
+    width: 100%;
+    max-width: none; /* Remove max-width for full width on small screens */
+  }
+  .demo-diaries-for-day {
+    padding: 1rem; /* Adjust padding for diary list */
+  }
+  .chart-label {
+    flex: 0 0 80px; /* Adjust label width for smaller screens */
+    padding-right: 1rem;
+    font-size: 0.85rem;
+  }
+  .chart-bar {
+    height: 24px; /* Adjust bar height */
+  }
+  .chart-value {
+    font-size: 0.9rem; /* Adjust value font size */
+    right: 0.5rem;
+  }
+  .emotion-legend-demo {
+    gap: 10px; /* Adjust gap in legend */
+    padding: 10px;
+  }
+  .legend-item-demo {
+    padding: 6px 10px;
+  }
+  .legend-color-box-demo {
+    width: 16px;
+    height: 16px;
+  }
+  .legend-text-demo {
+    font-size: 0.85em;
+  }
+  .image-caption {
+    font-size: 0.8rem; /* Adjust image caption font size */
+  }
+  .cta-button {
+    padding: 0.6rem 1.2rem; /* Adjust CTA button padding */
+    font-size: 0.9rem;
+  }
+  .cta-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo-header h1 {
+    font-size: 1.8rem;
+  }
+  .demo-header p {
+    font-size: 0.9rem;
+  }
+  .demo-section h2 {
+    font-size: 1.3rem;
+  }
+  .section-description {
+    font-size: 0.9rem;
+  }
+  .interactive-diary-writer textarea {
+    min-height: 120px;
+    font-size: 0.9rem;
+  }
+  .emotion-selection-area .emotion-tag {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  .fake-ai-feedback-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .demo-diary-item .diary-content {
+    font-size: 0.85rem;
+  }
+  .chart-label {
+    flex: 0 0 60px;
+    font-size: 0.75rem;
+  }
+  .chart-bar {
+    height: 20px;
+  }
+  .chart-value {
+    font-size: 0.8rem;
   }
 }

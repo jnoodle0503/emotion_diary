@@ -1,0 +1,43 @@
+.login-demo-button {
+  margin-top: 2rem; /* Add some space above the button */
+  margin-bottom: 2rem; /* Add some space below the button */
+}
+
+/* Styles for .cta-button copied from DemoPage.css */
+.cta-button {
+  background-color: white;
+  color: var(--color-primary);
+  padding: 0.8rem 1.5rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out; /* Transition all properties */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cta-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mascot original colors (default) */
+/* No specific fill rules here, so it defaults to its original colors */
+
+.cta-button:hover {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary); /* Ensure border stays primary */
+}
+
+.cta-button:hover svg path {
+  fill: white;
+}
+
+.cta-button:hover svg rect {
+  fill: #D2B48C; /* Light brown for the trunk on hover */
+}
