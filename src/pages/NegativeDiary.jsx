@@ -44,13 +44,12 @@ function NegativeDiaryPage() {
         setHasMore(false);
       } else {
         setDiaries((prevDiaries) => {
-          const newDiaries = [...prevDiaries];
-          data.forEach((newItem) => {
-            if (!newDiaries.some((existingItem) => existingItem.id === newItem.id)) {
-              newDiaries.push(newItem);
-            }
-          });
-          return newDiaries;
+          const newDiaries = [...prevDiaries, ...data];
+          // Remove duplicates, keeping the first occurrence, and sort
+          const uniqueAndSorted = newDiaries
+            .filter((diary, index, self) => index === self.findIndex((d) => d.id === diary.id))
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          return uniqueAndSorted;
         });
         setHasMore(data.length === PAGE_SIZE);
         setPage(pageNum + 1);

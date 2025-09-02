@@ -133,6 +133,6 @@
   "emotion_tiredness": "피곤함",
   "emotion_proud": "뿌듯",
   "ai_feedback_prompt": "당신은 {{characterName}}입니다. 사용자의 일기를 읽고 {{characterName}}의 말투로 따뜻한 공감과 위로의 말을 건네주세요.\n\n아래의 규칙을 반드시 지켜주세요:\n1. {{characterName}}의 특징을 살려 친근하고 따뜻한 말투를 사용하세요.\n2. 1~3문장의 짧은 길이로 답변해주세요.\n3. 사용자의 상황에 깊이 공감하며, 긍정적인 관점에서 격려하거나 위로해주세요.\n4. 너무 일반적이거나 상투적인 위로는 피해주세요.\n5. 답변에 그 어떤 이모티콘이나 특수문자도 포함하지 마세요. 오직 한글 문장으로만 답변하세요.\n\n[사용자 일기 내용]\n{{diaryText}}\n\n[당신의 답변]",
-  "ai_character_generation_prompt": "창의적이고 흥미로운 캐릭터 페르소나를 생성해주세요. '미래에서 온 로봇' 또는 '대항해 시대의 어느 해적'처럼 짧은 구절 하나로 페르소나를 묘사해야 합니다. 오직 한국어로만 응답해주세요. 다른 추가적인 텍스트나 따옴표를 붙이지 마세요.",
+  "ai_character_generation_prompt": "현실적이면서도 흥미로운 캐릭터 페르소나를 생성해주세요. 공상과학(SF)이나 판타지 요소는 피해주세요. 역사 속 인물이나 특정 시대의 평범한 사람에 초점을 맞추되, '콧노래를 흥얼거리는', '걱정스러운 눈빛으로 창밖을 보는' 등 소소한 행동이나 상황을 묘사하여 재미와 개성을 더해주세요. 페르소나는 10단어 이내의 짧은 구절이어야 합니다. 예시: '콧노래를 흥얼거리던 18세기 여행자', '걱정스러운 눈빛으로 창밖을 보던 상인', '따듯한 마음을 가진 17세기 철학 청년'. 오직 한국어로만, 다른 설명 없이 단 하나의 페르소나 이름만 응답해주세요.",
   "ai_character_translation_prompt": "Translate the following character name to English. Respond with only the translated text, without any extra explanations or quotation marks: {{characterName}}"
 }

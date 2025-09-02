@@ -70,7 +70,7 @@ function CalendarPage() {
       setDisplayLimit(INITIAL_DISPLAY_LIMIT);
       return;
     }
-    const allDiariesForDay = monthlyDiaries.filter((diary) => {
+    const filteredDiaries = monthlyDiaries.filter((diary) => {
       const diaryDate = new Date(diary.created_at);
       return (
         diaryDate.getFullYear() === selectedDate.getFullYear() &&
@@ -79,9 +79,13 @@ function CalendarPage() {
       );
     });
 
-    allDiariesForDay.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    setDiariesForSelectedDay(allDiariesForDay);
-    setHasMoreDiaries(allDiariesForDay.length > displayLimit);
+    // Ensure the final list is always sorted correctly and unique
+    const uniqueAndSorted = filteredDiaries
+      .filter((diary, index, self) => index === self.findIndex((d) => d.id === diary.id))
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    setDiariesForSelectedDay(uniqueAndSorted);
+    setHasMoreDiaries(uniqueAndSorted.length > displayLimit);
   }, [selectedDate, monthlyDiaries, displayLimit]);
 
   const getCharacterNameForDisplay = (diary) => {
