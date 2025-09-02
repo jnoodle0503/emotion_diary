@@ -31,8 +31,11 @@ function WriteDiary() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [aiFeedback, setAIFeedback] = useState('');
-  const [feedbackCharacter, setFeedbackCharacter] = useState(''); // For display
-  const [feedbackCharacterNames, setFeedbackCharacterNames] = useState(null); // {ko, en} object
+  const [feedbackCharacter, setFeedbackCharacter] = useState('');
+  const [feedbackCharacterNames, setFeedbackCharacterNames] = useState(null);
+
+  const [existingFeedback, setExistingFeedback] = useState(null);
+  const [existingCharNames, setExistingCharNames] = useState(null);
 
   useEffect(() => {
     if (isEditing) {
@@ -43,7 +46,24 @@ function WriteDiary() {
           navigate('/calendar');
         } else {
           setContent(data.content);
-          setSelectedEmotions(data.emotion || []);
+          
+          // Normalize old Korean emotion data to new English keys
+          const emotionsFromDB = data.emotion || [];
+          const koreanTranslations = i18n.getResourceBundle('ko', 'translation');
+          const koreanToEnglishMap = {};
+          if (koreanTranslations) {
+            Object.keys(EMOTIONS).forEach(key => {
+              const koreanName = koreanTranslations[`emotion_${key}`];
+              if (koreanName) {
+                koreanToEnglishMap[koreanName] = key;
+              }
+            });
+          }
+          const normalizedEmotions = emotionsFromDB.map(emo => koreanToEnglishMap[emo] || emo);
+          setSelectedEmotions(normalizedEmotions);
+
+          setExistingFeedback(data.ai_feedback);
+          setExistingCharNames(data.ai_character_names);
         }
         setLoading(false);
       };
@@ -55,7 +75,7 @@ function WriteDiary() {
       }
       setLoading(false);
     }
-  }, [diaryId, isEditing, navigate, searchParams]);
+  }, [diaryId, isEditing, navigate, searchParams, i18n]); // Added i18n to dependency array
 
   const handleEmotionClick = (emotion) => {
     setSelectedEmotions(prev => 
@@ -69,7 +89,7 @@ function WriteDiary() {
       emotion: selectedEmotions,
       user_id: user.id,
       ai_feedback: feedbackToSave,
-      ai_character_names: characterNamesToSave // Save the {ko, en} object
+      ai_character_names: characterNamesToSave
     };
 
     if (!isEditing && preselectedDate) {
@@ -96,17 +116,15 @@ function WriteDiary() {
     }
 
     if (isEditing) {
-      handleFinalSave();
+      handleFinalSave(existingFeedback, existingCharNames);
       return;
     }
 
     setIsSubmitting(true);
 
-    // 1. Generate character name in KO and EN
     const charNames = await generateAndTranslateCharacterName(i18n);
     setFeedbackCharacterNames(charNames);
 
-    // 2. Get feedback using character name in current language
     const currentLang = i18n.language;
     const characterForPrompt = charNames[currentLang] || charNames.en;
     setFeedbackCharacter(characterForPrompt);

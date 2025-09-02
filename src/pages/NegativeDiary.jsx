@@ -18,7 +18,7 @@ const NEGATIVE_EMOTIONS = [
 const PAGE_SIZE = 10;
 
 function NegativeDiaryPage() {
-  const { t, i18n } = useTranslation(); // Get i18n instance
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [diaries, setDiaries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +80,49 @@ function NegativeDiaryPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
+  const handleCheckboxChange = (id) => {
+    setSelectedDiaries((prev) =>
+      prev.includes(id)
+        ? prev.filter((diaryId) => diaryId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedDiaries.length === 0) {
+      alert(t('negative_diary_alert_select_diary_to_delete'));
+      return;
+    }
+
+    if (
+      window.confirm(
+        t('negative_diary_confirm_delete_selected', { count: selectedDiaries.length })
+      )
+    ) {
+      setDeletingIds(selectedDiaries);
+      setShowTrashCanAnimation(true);
+
+      setTimeout(async () => {
+        try {
+          for (const id of selectedDiaries) {
+            await deleteDiaryEntry(id);
+          }
+          setDiaries((prevDiaries) =>
+            prevDiaries.filter((diary) => !selectedDiaries.includes(diary.id))
+          );
+          setSelectedDiaries([]);
+          setDeletingIds([]);
+        } catch (error) {
+          console.error("Error deleting selected diaries:", error);
+          alert(t('negative_diary_alert_delete_failed'));
+          setDeletingIds([]);
+        } finally {
+          setShowTrashCanAnimation(false);
+        }
+      }, 1000);
+    }
+  };
+
   const getCharacterNameForDisplay = (diary) => {
     const currentLang = i18n.language;
     const fallbackLang = currentLang === 'ko' ? 'en' : 'ko';
@@ -91,8 +134,6 @@ function NegativeDiaryPage() {
     }
     return null;
   };
-
-  // ... (other handlers remain the same)
 
   return (
     <div className="page-container">
@@ -135,7 +176,7 @@ function NegativeDiaryPage() {
                         key={`${diary.id}-${emo}-${index}`}
                         className={`emotion-tag emotion-bg-${emo}`}
                       >
-                        {t(`emotion_${emo}`, emo)} 
+                        {t(`emotion_${emo}`, emo)}
                       </span>
                     ))}
                 </div>
@@ -165,7 +206,7 @@ function NegativeDiaryPage() {
       {diaries.length > 0 && (
         <div className="delete-selected-container">
           <button
-            onClick={() => { /* handleDeleteSelected logic here */ }}
+            onClick={handleDeleteSelected}
             className="delete-selected-btn"
             disabled={selectedDiaries.length === 0}
           >
