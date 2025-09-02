@@ -165,41 +165,44 @@
 }
 
 /* Emotion Background Colors */
-.emotion-bg-기쁨 {
+.emotion-bg-joy, .emotion-bg-기쁨 {
   background-color: var(--emotion-joy);
 }
-.emotion-bg-행복 {
+.emotion-bg-happiness, .emotion-bg-행복 {
   background-color: var(--emotion-happiness);
 }
-.emotion-bg-설렘 {
+.emotion-bg-excitement, .emotion-bg-설렘 {
   background-color: var(--emotion-excitement);
 }
-.emotion-bg-평온 {
-  background-color: var(--emotion-calm);
+.emotion-bg-calmness, .emotion-bg-평온 {
+  background-color: var(--emotion-calmness);
 }
-.emotion-bg-슬픔 {
+.emotion-bg-sadness, .emotion-bg-슬픔 {
   background-color: var(--emotion-sadness);
 }
-.emotion-bg-우울 {
+.emotion-bg-depression, .emotion-bg-우울 {
   background-color: var(--emotion-depression);
 }
-.emotion-bg-분노 {
+.emotion-bg-anger, .emotion-bg-분노 {
   background-color: var(--emotion-anger);
 }
-.emotion-bg-불안 {
+.emotion-bg-anxiety, .emotion-bg-불안 {
   background-color: var(--emotion-anxiety);
 }
-.emotion-bg-사랑 {
+.emotion-bg-love, .emotion-bg-사랑 {
   background-color: var(--emotion-love);
 }
-.emotion-bg-놀람 {
+.emotion-bg-surprise, .emotion-bg-놀람 {
   background-color: var(--emotion-surprise);
 }
-.emotion-bg-지루함 {
+.emotion-bg-boredom, .emotion-bg-지루함 {
   background-color: var(--emotion-boredom);
 }
-.emotion-bg-피곤함 {
+.emotion-bg-tiredness, .emotion-bg-피곤함 {
   background-color: var(--emotion-tiredness);
+}
+.emotion-bg-proud, .emotion-bg-뿌듯 {
+  background-color: var(--emotion-proud);
 }
 
 /* Responsive */

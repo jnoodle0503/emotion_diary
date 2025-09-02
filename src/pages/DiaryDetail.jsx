@@ -4,11 +4,11 @@ import { supabase, deleteDiaryEntry } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import Mascot from "../components/Mascot";
 import "./Pages.css";
-import "./DiaryDetail.css"; // New CSS file for this page
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import "./DiaryDetail.css";
+import { useTranslation } from 'react-i18next';
 
 function DiaryDetail() {
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, i18n } = useTranslation(); // Get i18n instance
   const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ function DiaryDetail() {
         .from("diaries")
         .select("*")
         .eq("id", id)
-        .eq("user_id", user.id) // Ensure user owns the diary
+        .eq("user_id", user.id)
         .single();
 
       if (error) {
@@ -44,19 +44,31 @@ function DiaryDetail() {
     };
 
     fetchDiary();
-  }, [id, user, navigate, t]); // Added t to dependency array
+  }, [id, user, navigate, t]);
 
   const handleDelete = async () => {
     if (window.confirm(t('diary_detail_confirm_delete'))) {
       try {
         await deleteDiaryEntry(diary.id);
         alert(t('diary_detail_alert_deleted'));
-        navigate("/calendar"); // Go back to calendar after deletion
+        navigate("/calendar");
       } catch (error) {
         console.error("Error deleting diary:", error);
         alert(t('diary_detail_alert_delete_failed'));
       }
     }
+  };
+
+  const getCharacterNameForDisplay = (diary) => {
+    const currentLang = i18n.language;
+    const fallbackLang = currentLang === 'ko' ? 'en' : 'ko';
+
+    if (diary.ai_character_names && typeof diary.ai_character_names === 'object') {
+      return diary.ai_character_names[currentLang] || diary.ai_character_names[fallbackLang];
+    } else if (diary.ai_character_name) {
+      return diary.ai_character_name;
+    }
+    return null;
   };
 
   if (loading) {
@@ -68,8 +80,10 @@ function DiaryDetail() {
   }
 
   if (!diary) {
-    return <div className="page-container">{t('diary_detail_diary_not_found_fallback')}</div>; // Should be caught by error state, but as a fallback
+    return <div className="page-container">{t('diary_detail_diary_not_found_fallback')}</div>;
   }
+
+  const characterName = getCharacterNameForDisplay(diary);
 
   return (
     <div className="page-container diary-detail-page">
@@ -82,14 +96,12 @@ function DiaryDetail() {
       </header>
 
       <div className="diary-item-display">
-        {" "}
-        {/* Reusing common diary item display styles */}
         <div className="diary-content-section">
           <div className="diary-meta">
             {diary.emotion &&
               diary.emotion.map((emo) => (
                 <span key={emo} className={`emotion-tag emotion-bg-${emo}`}>
-                  {emo}
+                  {t(`emotion_${emo}`, emo)}
                 </span>
               ))}
           </div>
@@ -97,7 +109,7 @@ function DiaryDetail() {
           {diary.ai_feedback && (
             <div className="ai-feedback">
               <p className="ai-character-name">
-                {diary.ai_character_name + t('from_ai_character_suffix') || t('ai_advice')}
+                {characterName ? characterName + t('from_ai_character_suffix') : t('ai_advice')}
               </p>
               <p className="ai-feedback-text">{diary.ai_feedback}</p>
             </div>

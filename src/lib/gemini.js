@@ -9,21 +9,41 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export async function getAIFeedback(diaryText, characterName) {
-  const prompt = `
-    당신은 ${characterName}입니다. 사용자의 일기를 읽고 ${characterName}의 말투로 따뜻한 공감과 위로의 말을 건네주세요.
-    아래의 규칙을 반드시 지켜주세요:
-    1. ${characterName}의 특징을 살려 친근하고 따뜻한 말투를 사용하세요.
-    2. 1~3문장의 짧은 길이로 답변해주세요.
-    3. 사용자의 상황에 깊이 공감하며, 긍정적인 관점에서 격려하거나 위로해주세요.
-    4. 너무 일반적이거나 상투적인 위로는 피해주세요.
-    5. 답변에 그 어떤 이모티콘이나 특수문자도 포함하지 마세요. 오직 한글 문장으로만 답변하세요.
+// Generates a character name in Korean, then translates it to English.
+export async function generateAndTranslateCharacterName(i18nInstance) {
+  try {
+    // 1. Generate character name in Korean
+    const generationPrompt = i18nInstance.t('ai_character_generation_prompt');
+    let result = await model.generateContent(generationPrompt);
+    let response = await result.response;
+    const koreanName = response.text().trim();
 
-    [사용자 일기 내용]
-    ${diaryText}
+    // 2. Translate the generated name to English
+    const translationPrompt = i18nInstance.t('ai_character_translation_prompt', { 
+      characterName: koreanName 
+    });
+    result = await model.generateContent(translationPrompt);
+    response = await result.response;
+    const englishName = response.text().trim();
 
-    [당신의 답변]
-  `;
+    return { ko: koreanName, en: englishName };
+
+  } catch (error) {
+    console.error("Error generating and translating character name:", error);
+    // Return a default character name pair in case of an error
+    return {
+      ko: "미래에서 온 로봇",
+      en: "A robot from the future"
+    };
+  }
+}
+
+export async function getAIFeedback(diaryText, characterName, i18nInstance) {
+  const prompt = i18nInstance.t('ai_feedback_prompt', {
+    characterName: characterName,
+    diaryText: diaryText,
+    interpolation: { escapeValue: false } // Allow HTML in translations if needed
+  });
 
   try {
     const result = await model.generateContent(prompt);

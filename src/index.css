@@ -19,7 +19,7 @@
   --emotion-joy: #FFECB3; /* 연한 노랑 */
   --emotion-happiness: #FFCDD2; /* 연한 분홍 */
   --emotion-excitement: #FFCCBC; /* 연한 주황 */
-  --emotion-calm: #BBDEFB; /* 연한 파랑 */
+  --emotion-calmness: #BBDEFB; /* 연한 파랑 */
   --emotion-sadness: #CFD8DC; /* 연한 회색 파랑 */
   --emotion-depression: #B0BEC5; /* 중간 회색 */
   --emotion-anger: #FFCDD2; /* 연한 빨강 */
@@ -28,6 +28,7 @@
   --emotion-surprise: #FFECB3; /* 연한 노랑 */
   --emotion-boredom: #CFD8DC; /* 연한 회색 파랑 */
   --emotion-tiredness: #B0BEC5; /* 중간 회색 */
+  --emotion-proud: #C8E6C9; /* 연한 녹색 */
 }
 
 /* 3. Global Style Reset */

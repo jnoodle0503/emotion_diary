@@ -3,20 +3,20 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import Mascot from '../components/Mascot';
-import FeedbackModal, { getRandomCharacter } from '../components/FeedbackModal';
-import { getAIFeedback } from '../lib/gemini';
+import FeedbackModal from '../components/FeedbackModal';
+import { getAIFeedback, generateAndTranslateCharacterName } from '../lib/gemini';
 import './Pages.css';
 import './WriteDiary.css';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { useTranslation } from 'react-i18next';
 
 const EMOTIONS = {
-  '기쁨': '😊', '행복': '🥰', '설렘': '🤩', '평온': '😌', 
-  '슬픔': '😢', '우울': '😞', '분노': '😠', '불안': '😟',
-  '사랑': '❤️', '놀람': '😮', '지루함': '😴', '피곤함': '😩'
+  'joy': '😊', 'happiness': '🥰', 'excitement': '🤩', 'proud': '😌', 'calmness': '😌', 
+  'sadness': '😢', 'depression': '😞', 'anger': '😠', 'anxiety': '😟',
+  'love': '❤️', 'surprise': '😮', 'boredom': '😴', 'tiredness': '😩'
 };
 
 function WriteDiary() {
-  const { t } = useTranslation(); // Initialize useTranslation
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { id: diaryId } = useParams();
   const navigate = useNavigate();
@@ -28,11 +28,11 @@ function WriteDiary() {
   const [preselectedDate, setPreselectedDate] = useState(null);
   const isEditing = !!diaryId;
 
-  // AI Feedback Modal State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [aiFeedback, setAIFeedback] = useState('');
-  const [feedbackCharacter, setFeedbackCharacter] = useState('');
+  const [feedbackCharacter, setFeedbackCharacter] = useState(''); // For display
+  const [feedbackCharacterNames, setFeedbackCharacterNames] = useState(null); // {ko, en} object
 
   useEffect(() => {
     if (isEditing) {
@@ -63,13 +63,13 @@ function WriteDiary() {
     );
   };
 
-  const handleFinalSave = async (feedbackToSave = null, characterToSave = null) => {
+  const handleFinalSave = async (feedbackToSave = null, characterNamesToSave = null) => {
     const diaryData = { 
       content, 
       emotion: selectedEmotions,
       user_id: user.id,
       ai_feedback: feedbackToSave,
-      ai_character_name: characterToSave
+      ai_character_names: characterNamesToSave // Save the {ko, en} object
     };
 
     if (!isEditing && preselectedDate) {
@@ -95,30 +95,36 @@ function WriteDiary() {
       return;
     }
 
-    // 수정 모드일 때는 AI 피드백 없이 바로 저장
     if (isEditing) {
       handleFinalSave();
       return;
     }
 
     setIsSubmitting(true);
-    const character = getRandomCharacter();
-    setFeedbackCharacter(character);
 
-    const feedback = await getAIFeedback(content, character); // Pass character to getAIFeedback
-    
+    // 1. Generate character name in KO and EN
+    const charNames = await generateAndTranslateCharacterName(i18n);
+    setFeedbackCharacterNames(charNames);
+
+    // 2. Get feedback using character name in current language
+    const currentLang = i18n.language;
+    const characterForPrompt = charNames[currentLang] || charNames.en;
+    setFeedbackCharacter(characterForPrompt);
+
+    const feedback = await getAIFeedback(content, characterForPrompt, i18n);
     setAIFeedback(feedback);
+    
     setIsSubmitting(false);
     setShowFeedbackModal(true);
   };
 
   const handleLike = () => {
-    handleFinalSave(aiFeedback, feedbackCharacter);
+    handleFinalSave(aiFeedback, feedbackCharacterNames);
     setShowFeedbackModal(false);
   };
 
   const handleDislike = () => {
-    handleFinalSave(null, null); // 피드백 없이 저장
+    handleFinalSave(null, null);
     setShowFeedbackModal(false);
   };
 
@@ -148,7 +154,7 @@ function WriteDiary() {
                   onClick={() => handleEmotionClick(name)}
                 >
                   <span className="emotion-emoji">{emoji}</span>
-                  <span className="emotion-name">{name}</span>
+                  <span className="emotion-name">{t(`emotion_${name}`)}</span>
                 </button>
               ))}
             </div>
