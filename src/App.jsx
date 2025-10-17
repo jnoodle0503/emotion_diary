@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import CalendarPage from './pages/Calendar';
 import MyPage from './pages/MyPage';
@@ -45,19 +45,27 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const { session, profile } = useAuth();
+  const location = useLocation();
+
+  // Paths where ads should not be shown
+  const adFreePaths = ['/login', '/register-nickname'];
+
+  // Determine if the current path should have ads
+  const shouldShowAds = !adFreePaths.includes(location.pathname);
 
   return (
     <div className="App">
-      {/* 세션이 있고 프로필이 로드되었으며 닉네임이 있을 때만 네비게이션 바와 애드센스를 보여줍니다. */}
-      {(session && profile && profile.nickname) && (
-        <>
-          <Navbar />
-          <AdSenseScript />
-        </>
-      )}
+      {/* Navbar is only shown for fully logged-in users */}
+      {(session && profile && profile.nickname) && <Navbar />}
+
+      {/* Ads are shown on all pages except login and registration */}
+      {shouldShowAds && <AdSenseScript />}
+
       <main>
         <Routes>
-          <Route path="/demo" element={<DemoPage />} />
+          {/* DemoPage is now the main landing page */}
+          <Route path="/" element={<DemoPage />} />
+          
           <Route 
             path="/login" 
             element={session ? <Navigate to="/calendar" replace /> : <Login />}
@@ -65,7 +73,7 @@ function App() {
           {/* Nickname registration page - NOT protected */}
           <Route path="/register-nickname" element={<NicknameRegistration />} /> 
 
-          <Route path="/" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+          {/* The original root path is now at /calendar */}
           <Route 
             path="/calendar"
             element={
