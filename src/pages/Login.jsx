@@ -92,7 +92,7 @@ function Login() {
           </div>
         </div>
       </div>
-      <Link to="/demo" className="cta-button login-demo-button">
+      <Link to="/" className="cta-button login-demo-button">
         <Mascot />
         {t('experience_demo')}
       </Link>
