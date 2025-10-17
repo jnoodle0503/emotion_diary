@@ -11,6 +11,7 @@ import DemoPage from './pages/DemoPage'; // Import DemoPage
 import Navbar from './components/Navbar';
 import NicknameRegistration from './pages/NicknameRegistration';
 import DiaryDetail from './pages/DiaryDetail'; // New import
+import AdSenseScript from './components/AdSenseScript'; // Import AdSense script component
 import './App.css';
 
 // 로그인한 사용자만 접근할 수 있는 보호된 라우트 컴포넌트
@@ -47,8 +48,13 @@ function App() {
 
   return (
     <div className="App">
-      {/* 세션이 있고 프로필이 로드되었으며 닉네임이 있을 때만 네비게이션 바를 보여줍니다. */}
-      {(session && profile && profile.nickname) && <Navbar />}
+      {/* 세션이 있고 프로필이 로드되었으며 닉네임이 있을 때만 네비게이션 바와 애드센스를 보여줍니다. */}
+      {(session && profile && profile.nickname) && (
+        <>
+          <Navbar />
+          <AdSenseScript />
+        </>
+      )}
       <main>
         <Routes>
           <Route path="/demo" element={<DemoPage />} />
