@@ -11,7 +11,6 @@ import DemoPage from './pages/DemoPage'; // Import DemoPage
 import Navbar from './components/Navbar';
 import NicknameRegistration from './pages/NicknameRegistration';
 import DiaryDetail from './pages/DiaryDetail'; // New import
-import AdSenseScript from './components/AdSenseScript'; // Import AdSense script component
 import './App.css';
 
 // 로그인한 사용자만 접근할 수 있는 보호된 라우트 컴포넌트
@@ -57,9 +56,6 @@ function App() {
     <div className="App">
       {/* Navbar is only shown for fully logged-in users */}
       {(session && profile && profile.nickname) && <Navbar />}
-
-      {/* Ads are shown on all pages except login and registration */}
-      {shouldShowAds && <AdSenseScript />}
 
       <main>
         <Routes>
