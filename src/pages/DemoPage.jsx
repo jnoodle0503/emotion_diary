@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async"; // Import Helmet
 import Mascot from "../components/Mascot";
+import AdSenseAd from "../components/AdSenseAd"; // Import AdSense component
 import Calendar from "react-calendar"; // Import react-calendar
 import "react-calendar/dist/Calendar.css"; // Import calendar styles
 import {
@@ -231,6 +233,26 @@ function DemoPage() {
 
   return (
     <div className="page-container demo-page-container">
+      <Helmet>
+        <title>Marden - 마음 일기 | AI와 함께하는 감정 일기장</title>
+        <meta
+          name="description"
+          content="Marden은 당신의 하루를 기록하고 마음을 가꾸는 AI 감정 일기장입니다. 일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공하고, 감정 통계를 통해 자신의 마음을 더 잘 이해할 수 있습니다. 지금 무료로 체험해보세요."
+        />
+        <meta
+          name="keywords"
+          content="일기장, 감정일기, AI 일기, 마음 건강, 감정 관리, 정신 건강, 일기 앱, 감정 분석, 무료 일기장, Marden"
+        />
+        <meta property="og:title" content="Marden - 마음 일기 | AI와 함께하는 감정 일기장" />
+        <meta
+          property="og:description"
+          content="일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공합니다. 감정 통계로 나의 마음을 더 잘 이해해보세요."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://marden-diary.vercel.app/" />
+        <link rel="canonical" href="https://marden-diary.vercel.app/" />
+      </Helmet>
+
       <header className="demo-header">
         <div className="mascot-container">
           <Mascot />
@@ -238,6 +260,27 @@ function DemoPage() {
         <h1>{t('welcome_to_marden')}</h1>
         <p>{t('marden_description_1')}</p>
         <p>{t('marden_description_2')}</p>
+
+        {/* SEO를 위한 추가 텍스트 콘텐츠 */}
+        <div className="seo-content" style={{ marginTop: '2rem', lineHeight: '1.8' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>
+            Marden으로 마음 건강을 챙기세요
+          </h2>
+          <p style={{ marginBottom: '1rem' }}>
+            Marden은 단순한 일기장이 아닙니다. 당신의 감정을 이해하고 공감하는 AI 친구와 함께
+            하루를 돌아보며 마음을 가꿀 수 있는 특별한 공간입니다. 매일 일기를 쓰는 것만으로도
+            자신의 감정을 더 잘 이해하고, 스트레스를 관리하며, 정신 건강을 증진시킬 수 있습니다.
+          </p>
+          <p style={{ marginBottom: '1rem' }}>
+            일기를 작성하면 중세 시대의 무법자, 미래에서 온 로봇 등 다양한 AI 캐릭터들이
+            당신만의 스타일로 따뜻한 위로와 조언을 전해드립니다. 캘린더를 통해 과거의 감정을
+            되돌아보고, 감정 통계 차트로 나의 감정 패턴을 한눈에 파악할 수 있습니다.
+          </p>
+          <p style={{ marginBottom: '1rem' }}>
+            지금 바로 Marden을 시작하고, 더 건강하고 행복한 마음으로 하루를 살아가세요.
+            회원가입은 구글 계정으로 간편하게 가능하며, 모든 일기는 안전하게 암호화되어 보관됩니다.
+          </p>
+        </div>
       </header>
 
       {/* Feature 1: Interactive Diary Writing & AI Feedback */}
@@ -308,6 +351,14 @@ function DemoPage() {
           </div>
         </div>
       </section>
+
+      {/* Google AdSense Ad - Between sections */}
+      <AdSenseAd
+        adSlot="YOUR_AD_SLOT_ID_HERE"
+        adFormat="auto"
+        fullWidthResponsive={true}
+        style={{ display: 'block', margin: '2rem auto', textAlign: 'center' }}
+      />
 
       {/* Feature 2: Interactive Calendar View */}
       <section className="demo-section">
@@ -404,6 +455,14 @@ function DemoPage() {
           ))}
         </div>
       </section>
+
+      {/* Google AdSense Ad - Before CTA */}
+      <AdSenseAd
+        adSlot="YOUR_AD_SLOT_ID_HERE"
+        adFormat="auto"
+        fullWidthResponsive={true}
+        style={{ display: 'block', margin: '2rem auto', textAlign: 'center' }}
+      />
 
       {/* Call to Action */}
       <section className="demo-section demo-cta">

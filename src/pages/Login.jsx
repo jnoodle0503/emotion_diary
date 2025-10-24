@@ -1,5 +1,6 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { Helmet } from "react-helmet-async"; // Import Helmet
 import { supabase } from "../lib/supabase";
 import Mascot from "../components/Mascot"; // "마음이" 캐릭터 import
 import { BASE_URL } from "../lib/domain";
@@ -49,6 +50,26 @@ function Login() {
 
   return (
     <div className="page-container login-page-container">
+      <Helmet>
+        <title>로그인 - Marden | 마음 일기</title>
+        <meta
+          name="description"
+          content="Marden 마음 일기에 로그인하세요. 구글 계정으로 간편하게 시작할 수 있습니다. AI 캐릭터와 함께 감정을 기록하고 마음을 가꿔보세요."
+        />
+        <meta
+          name="keywords"
+          content="Marden 로그인, 일기장 로그인, 감정일기 시작하기, 마음 건강 앱"
+        />
+        <meta property="og:title" content="로그인 - Marden | 마음 일기" />
+        <meta
+          property="og:description"
+          content="구글 계정으로 간편하게 로그인하고 AI와 함께 일기를 시작하세요."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://marden-diary.vercel.app/login" />
+        <link rel="canonical" href="https://marden-diary.vercel.app/login" />
+      </Helmet>
+
       <div className="mascot-container">
         <Mascot />
         <h1 className="login-title">{t('app_name')}</h1>

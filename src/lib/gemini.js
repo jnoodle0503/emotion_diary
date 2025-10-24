@@ -10,7 +10,15 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // Define the list of models to try in order
-const MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash"];
+// Updated model names as of January 2025
+// The correct format is without "-latest" suffix for v1beta API
+const MODELS = [
+  "gemini-2.0-flash-exp",      // Experimental Gemini 2.0
+  "gemini-exp-1206",            // Experimental model
+  "models/gemini-1.5-flash",    // Stable 1.5 Flash with "models/" prefix
+  "models/gemini-1.5-pro",      // Stable 1.5 Pro with "models/" prefix
+  "gemini-1.5-flash-8b",        // Smaller 8B parameter model
+];
 
 // Function to generate content with fallback models
 async function generateContentWithFallback(prompt) {
@@ -19,23 +27,29 @@ async function generateContentWithFallback(prompt) {
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent(prompt);
+      console.log(`✅ Successfully used model: ${modelName}`);
       return result.response;
     } catch (error) {
-      console.error(`Error with model ${modelName}:`, error);
-      console.error(`Error status: ${error.status}, Error name: ${error.name}`); // Full error object logged
-      // Check if the error is related to token exhaustion or rate limiting
-      // This is a placeholder for actual error checking.
-      // In a real scenario, you'd parse the error object for specific codes/messages.
-      if (error.status === 429) {
-        console.log(`Retrying with next model due to token/rate limit error: ${modelName}`);
+      console.error(`❌ Error with model ${modelName}:`, error.message);
+
+      // Check if the error is related to model not found, token exhaustion, or rate limiting
+      const shouldRetry =
+        error.status === 404 || // Model not found - try next model
+        error.status === 429 || // Rate limit - try next model
+        error.message?.includes('not found') ||
+        error.message?.includes('not supported');
+
+      if (shouldRetry) {
+        console.log(`⏭️ Trying next model due to error: ${error.status || 'unknown'}`);
         continue; // Try the next model
       } else {
-        // If it's another type of error, re-throw it
+        // If it's another type of error (like API key invalid), re-throw it
+        console.error(`🚫 Non-recoverable error with model ${modelName}`);
         throw error;
       }
     }
   }
-  throw new Error("All Gemini models failed to generate content.");
+  throw new Error("All Gemini models failed to generate content. Please check your API key and internet connection.");
 }
 
 // Generates a character name in Korean, then translates it to English.

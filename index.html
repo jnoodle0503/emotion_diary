@@ -1,15 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/mascot_favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Marden</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Marden - 마음 일기 | AI와 함께하는 감정 일기장</title>
+    <meta name="description" content="Marden은 당신의 하루를 기록하고 마음을 가꾸는 AI 감정 일기장입니다. 일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공하고, 감정 통계를 통해 자신의 마음을 더 잘 이해할 수 있습니다. 지금 무료로 체험해보세요." />
+    <meta name="keywords" content="일기장, 감정일기, AI 일기, 마음 건강, 감정 관리, 정신 건강, 일기 앱, 감정 분석, 무료 일기장, Marden" />
+    <meta name="author" content="Marden Team" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://marden-diary.vercel.app/" />
+    <meta property="og:title" content="Marden - 마음 일기 | AI와 함께하는 감정 일기장" />
+    <meta property="og:description" content="일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공합니다. 감정 통계로 나의 마음을 더 잘 이해해보세요." />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://marden-diary.vercel.app/" />
+    <meta property="twitter:title" content="Marden - 마음 일기 | AI와 함께하는 감정 일기장" />
+    <meta property="twitter:description" content="일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공합니다. 감정 통계로 나의 마음을 더 잘 이해해보세요." />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://marden-diary.vercel.app/" />
+
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8158152519872192"
      crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Structured Data / JSON-LD for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Marden - 마음 일기",
+      "description": "AI와 함께하는 감정 일기장. 일기를 쓰고 AI 캐릭터의 따뜻한 피드백을 받으며 감정 통계로 자신의 마음을 이해해보세요.",
+      "url": "https://marden-diary.vercel.app/",
+      "applicationCategory": "LifestyleApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "featureList": [
+        "AI 캐릭터 피드백",
+        "감정 일기 작성",
+        "감정 통계 분석",
+        "캘린더 뷰",
+        "마음 건강 관리"
+      ]
+    }
+    </script>
   </head>
   <body>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: sans-serif;">
+        <h1>Marden - 마음 일기</h1>
+        <p>AI와 함께하는 감정 일기장입니다.</p>
+        <p>일기를 쓰고 AI 캐릭터의 따뜻한 피드백을 받으며 감정 통계로 자신의 마음을 이해해보세요.</p>
+        <p><strong>JavaScript를 활성화해주세요.</strong></p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
