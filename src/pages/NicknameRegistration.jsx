@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import Mascot from '../components/Mascot';
 import './Pages.css'; // For page-container
@@ -35,54 +35,22 @@ function NicknameRegistration() {
     e.preventDefault();
     setError(null);
 
-    console.log('handleSubmit called'); // Log 1
-
     if (!nickname.trim()) {
       setError(t('nickname_registration_alert_enter_nickname'));
-      console.log('Nickname is empty'); // Log 2
       return;
     }
 
     setLoading(true);
-    console.log('Loading state set to true'); // Log 3
 
     try {
-      console.log('Attempting to upsert nickname:', nickname, 'for user:', user.id); // Log 4
-      
-      const { data, error: upsertError } = await supabase
-        .from('profiles')
-        .upsert({ id: user.id, nickname: nickname }, { onConflict: 'id' }); // onConflict: 'id' is crucial
-
-      if (upsertError) {
-        console.log('Upsert error:', upsertError); // Log 5
-        throw upsertError;
-      }
-      
-      // Force a session refresh to update AuthContext with the new profile data
-      console.log('Forcing session refresh...'); // Log 8.1
-      const { data: { user: refreshedUser }, error: refreshError } = await supabase.auth.getUser();
-      if (refreshError) {
-        console.error('Error refreshing user session:', refreshError); // Log 8.2
-        // Handle refresh error, maybe don't navigate or show a specific message
-      } else {
-        console.log('Session refreshed, user:', refreshedUser); // Log 8.3
-      }
-
-      // Explicitly refresh profile in AuthContext
-      console.log('Calling refreshProfile...');
+      await api.updateProfile({ nickname });
       await refreshProfile();
-      console.log('refreshProfile completed.');
-
-      console.log('Nickname saved successfully, navigating to /calendar'); // Log 8
-      navigate('/calendar'); // Redirect to main app after successful registration
-
+      navigate('/calendar');
     } catch (err) {
-      console.log('Caught error during save:', err); // Log 9
       console.error('Error saving nickname:', err);
       setError(t('nickname_registration_alert_save_failed'));
     } finally {
       setLoading(false);
-      console.log('Loading state set to false'); // Log 10
     }
   };
 

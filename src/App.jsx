@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import CalendarPage from './pages/Calendar';
 import MyPage from './pages/MyPage';
@@ -44,13 +44,6 @@ function ProtectedRoute({ children }) {
 
 function App() {
   const { session, profile } = useAuth();
-  const location = useLocation();
-
-  // Paths where ads should not be shown
-  const adFreePaths = ['/login', '/register-nickname'];
-
-  // Determine if the current path should have ads
-  const shouldShowAds = !adFreePaths.includes(location.pathname);
 
   return (
     <div className="App">

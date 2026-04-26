@@ -151,7 +151,7 @@ function DemoPage() {
           boxWidth: 10, // Size of the color box
           boxHeight: 10,
         },
-        onClick: (e, legendItem, legend) => {
+        onClick: (e, legendItem) => {
           const emotionName = legendItem.text;
           setHighlightedEmotion((prev) =>
             prev === emotionName ? null : emotionName
@@ -202,7 +202,7 @@ function DemoPage() {
             size: 12,
           },
           color: "var(--color-text-secondary)",
-          callback: function (value, index, ticks) {
+          callback: function (value, index) {
             return chartLabels[index];
           },
         },

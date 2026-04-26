@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { supabase, deleteDiaryEntry } from "../lib/supabase";
+import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils";
@@ -22,7 +22,6 @@ function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [diariesForSelectedDay, setDiariesForSelectedDay] = useState([]);
   const [displayLimit, setDisplayLimit] = useState(INITIAL_DISPLAY_LIMIT);
-  const [hasMoreDiaries, setHasMoreDiaries] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const formatDateToYYYYMMDD = (date) => {
@@ -44,19 +43,15 @@ function CalendarPage() {
       const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
       endDate.setHours(23, 59, 59, 999);
 
-      const { data, error } = await supabase
-        .from("diaries")
-        .select("*")
-        .eq("user_id", user.id)
-        .gte("created_at", startDate.toISOString())
-        .lte("created_at", endDate.toISOString())
-        .order("created_at", { ascending: false });
-
-      if (error) {
+      try {
+        const data = await api.getDiaries({
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        });
+        setMonthlyDiaries(data);
+      } catch (error) {
         console.error("Error fetching diaries for month:", error);
         setMonthlyDiaries([]);
-      } else {
-        setMonthlyDiaries(data);
       }
       setLoading(false);
     };
@@ -85,7 +80,6 @@ function CalendarPage() {
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     setDiariesForSelectedDay(uniqueAndSorted);
-    setHasMoreDiaries(uniqueAndSorted.length > displayLimit);
   }, [selectedDate, monthlyDiaries, displayLimit]);
 
   const getCharacterNameForDisplay = (diary) => {
@@ -103,10 +97,11 @@ function CalendarPage() {
   const handleDelete = async (id) => {
     if (window.confirm(t('calendar_confirm_delete_diary'))) {
       try {
-        await deleteDiaryEntry(id);
+        await api.deleteDiary(id);
         setMonthlyDiaries((prevDiaries) => prevDiaries.filter((diary) => diary.id !== id));
         alert(t('calendar_alert_diary_deleted'));
       } catch (error) {
+        console.error("Error deleting diary:", error);
         alert(t('calendar_alert_delete_failed'));
       }
     }

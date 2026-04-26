@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../context/AuthContext';
+import { api } from '../lib/api';
 import Mascot from '../components/Mascot';
 import FeedbackModal from '../components/FeedbackModal';
 import { getAIFeedback, generateAndTranslateCharacterName } from '../lib/gemini';
@@ -17,7 +16,6 @@ const EMOTIONS = {
 
 function WriteDiary() {
   const { t, i18n } = useTranslation();
-  const { user } = useAuth();
   const { id: diaryId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -40,14 +38,10 @@ function WriteDiary() {
   useEffect(() => {
     if (isEditing) {
       const fetchDiary = async () => {
-        const { data, error } = await supabase.from('diaries').select('*').eq('id', diaryId).single();
-        if (error) {
-          console.error('Error fetching diary:', error);
-          navigate('/calendar');
-        } else {
+        try {
+          const data = await api.getDiary(diaryId);
           setContent(data.content);
-          
-          // Normalize old Korean emotion data to new English keys
+
           const emotionsFromDB = data.emotion || [];
           const koreanTranslations = i18n.getResourceBundle('ko', 'translation');
           const koreanToEnglishMap = {};
@@ -64,6 +58,9 @@ function WriteDiary() {
 
           setExistingFeedback(data.ai_feedback);
           setExistingCharNames(data.ai_character_names);
+        } catch (error) {
+          console.error('Error fetching diary:', error);
+          navigate('/calendar');
         }
         setLoading(false);
       };
@@ -87,7 +84,6 @@ function WriteDiary() {
     const diaryData = { 
       content, 
       emotion: selectedEmotions,
-      user_id: user.id,
       ai_feedback: feedbackToSave,
       ai_character_names: characterNamesToSave
     };
@@ -96,15 +92,16 @@ function WriteDiary() {
       diaryData.created_at = preselectedDate + 'T12:00:00Z';
     }
 
-    const { error } = isEditing
-      ? await supabase.from('diaries').update(diaryData).eq('id', diaryId)
-      : await supabase.from('diaries').insert(diaryData);
-
-    if (error) {
+    try {
+      if (isEditing) {
+        await api.updateDiary(diaryId, diaryData);
+      } else {
+        await api.createDiary(diaryData);
+      }
+      navigate('/calendar');
+    } catch (error) {
       console.error('Error saving diary:', error);
       alert(t('write_diary_alert_save_failed'));
-    } else {
-      navigate('/calendar');
     }
   };
 

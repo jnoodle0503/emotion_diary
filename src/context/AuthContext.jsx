@@ -1,90 +1,82 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { supabase } from '../lib/supabase';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { api } from '../lib/api';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null); // New state for profile
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const refreshProfile = async () => {
-    if (!user) return; // Can only refresh if user is logged in
-    setLoading(true); // Set loading while refreshing profile
-    const { data: profileData, error: profileError } = await supabase
-      .from('profiles')
-      .select('nickname, full_name, avatar_url')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (profileError) {
-      console.error('Error refreshing profile:', profileError);
-      setProfile(null);
-    } else {
+  const refreshProfile = useCallback(async () => {
+    if (!user) return null;
+    try {
+      const profileData = await api.getProfile();
       setProfile(profileData);
+      return profileData;
+    } catch (error) {
+      console.error('Error refreshing profile:', error);
+      setProfile(null);
+      return null;
     }
-    setLoading(false); // Reset loading
-  };
+  }, [user]);
+
+  const loadCurrentUser = useCallback(async () => {
+    try {
+      const { user: currentUser } = await api.getMe();
+      setSession({ user: currentUser });
+      setUser(currentUser);
+      const profileData = await api.getProfile();
+      setProfile(profileData);
+    } catch {
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchUserAndProfile = async (currentSession) => {
-      setSession(currentSession);
-      const currentUser = currentSession?.user ?? null;
-      setUser(currentUser);
+    loadCurrentUser();
+  }, [loadCurrentUser]);
 
-      if (currentUser) {
-        // Fetch profile data
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('nickname, full_name, avatar_url') // Select nickname and other existing fields
-          .eq('id', currentUser.id)
-          .maybeSingle(); // Changed from .single() to .maybeSingle()
-
-        if (profileError) { // No need to check for PGRST116 with maybeSingle()
-          console.error('Error fetching profile:', profileError);
-          setProfile(null); // Set profile to null on error
-        } else {
-          setProfile(profileData);
-        }
-      } else {
-        setProfile(null); // Clear profile if no user
-      }
-      setLoading(false);
-    };
-
-    // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetchUserAndProfile(session);
-    });
-
-    // Listen for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        fetchUserAndProfile(session);
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const applyAuthResult = async ({ user: authUser }) => {
+    setSession({ user: authUser });
+    setUser(authUser);
+    const profileData = await api.getProfile();
+    setProfile(profileData);
+  };
 
   const value = {
     session,
     user,
     profile,
-    signOut: async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        // This error is often due to an expired token or network issue.
-        // The client-side session is cleared by the library regardless.
-        // We log it for debugging but don't need to show it to the user.
-        console.error('Error during sign out:', error.message);
-      }
-      // onAuthStateChange will handle the UI update.
+    loading,
+    signIn: async (credentials) => {
+      const result = await api.login(credentials);
+      await applyAuthResult(result);
+      return result;
     },
-    refreshProfile, // Expose the new function
+    register: async (payload) => {
+      const result = await api.register(payload);
+      await applyAuthResult(result);
+      return result;
+    },
+    signOut: async () => {
+      try {
+        await api.logout();
+      } catch (error) {
+        console.error('Error during sign out:', error);
+      } finally {
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+      }
+    },
+    refreshProfile,
   };
 
   return (

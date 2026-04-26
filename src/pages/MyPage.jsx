@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { deleteUserData } from "../lib/supabase";
+import { api } from "../lib/api";
 import Mascot from "../components/Mascot";
 import DeveloperInfoModal from "../components/DeveloperInfoModal"; // Import DeveloperInfoModal
 import "./MyPage.css";
@@ -41,7 +41,7 @@ function MyPage() {
       ) {
         // This will be translated later
         try {
-          await deleteUserData(user.id);
+          await api.deleteAccount();
           await signOut();
           alert("계정과 모든 데이터가 성공적으로 삭제되었습니다."); // This will be translated later
           navigate("/login");

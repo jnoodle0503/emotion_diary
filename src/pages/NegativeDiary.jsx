@@ -1,25 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { supabase, deleteDiaryEntry } from "../lib/supabase";
-import { useAuth } from "../context/AuthContext";
+import { api } from "../lib/api";
 import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils";
 import "./Pages.css";
 import "./NegativeDiary.css";
 import { useTranslation } from 'react-i18next';
 
-const NEGATIVE_EMOTIONS = [
-  "sadness", "슬픔", 
-  "depression", "우울", 
-  "anger", "분노", 
-  "anxiety", "불안", 
-  "boredom", "지루함", 
-  "tiredness", "피곤함"
-];
 const PAGE_SIZE = 10;
 
 function NegativeDiaryPage() {
   const { t, i18n } = useTranslation();
-  const { user } = useAuth();
   const [diaries, setDiaries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
@@ -31,21 +21,13 @@ function NegativeDiaryPage() {
   const fetchNegativeDiaries = useCallback(
     async (pageNum) => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("diaries")
-        .select("*")
-        .eq("user_id", user.id)
-        .overlaps("emotion", NEGATIVE_EMOTIONS)
-        .order("created_at", { ascending: false })
-        .range(pageNum * PAGE_SIZE, (pageNum + 1) * PAGE_SIZE - 1);
-
-      if (error) {
-        console.error("Error fetching negative diaries:", error);
-        setHasMore(false);
-      } else {
+      try {
+        const data = await api.getNegativeDiaries({
+          offset: pageNum * PAGE_SIZE,
+          limit: PAGE_SIZE,
+        });
         setDiaries((prevDiaries) => {
           const newDiaries = [...prevDiaries, ...data];
-          // Remove duplicates, keeping the first occurrence, and sort
           const uniqueAndSorted = newDiaries
             .filter((diary, index, self) => index === self.findIndex((d) => d.id === diary.id))
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -53,10 +35,13 @@ function NegativeDiaryPage() {
         });
         setHasMore(data.length === PAGE_SIZE);
         setPage(pageNum + 1);
+      } catch (error) {
+        console.error("Error fetching negative diaries:", error);
+        setHasMore(false);
       }
       setLoading(false);
     },
-    [user.id]
+    []
   );
 
   useEffect(() => {
@@ -104,7 +89,7 @@ function NegativeDiaryPage() {
       setTimeout(async () => {
         try {
           for (const id of selectedDiaries) {
-            await deleteDiaryEntry(id);
+            await api.deleteDiary(id);
           }
           setDiaries((prevDiaries) =>
             prevDiaries.filter((diary) => !selectedDiaries.includes(diary.id))

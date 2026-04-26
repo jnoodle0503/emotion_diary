@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { supabase, deleteDiaryEntry } from "../lib/supabase";
+import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import Mascot from "../components/Mascot";
 import "./Pages.css";
@@ -23,22 +23,13 @@ function DiaryDetail() {
         return;
       }
       setLoading(true);
-      const { data, error } = await supabase
-        .from("diaries")
-        .select("*")
-        .eq("id", id)
-        .eq("user_id", user.id)
-        .single();
-
-      if (error) {
+      try {
+        const data = await api.getDiary(id);
+        setDiary(data);
+      } catch (error) {
         console.error("Error fetching diary:", error);
         setError(t('diary_detail_error_fetching_diary'));
         setDiary(null);
-      } else if (!data) {
-        setError(t('diary_detail_diary_not_found'));
-        setDiary(null);
-      } else {
-        setDiary(data);
       }
       setLoading(false);
     };
@@ -49,7 +40,7 @@ function DiaryDetail() {
   const handleDelete = async () => {
     if (window.confirm(t('diary_detail_confirm_delete'))) {
       try {
-        await deleteDiaryEntry(diary.id);
+        await api.deleteDiary(diary.id);
         alert(t('diary_detail_alert_deleted'));
         navigate("/calendar");
       } catch (error) {

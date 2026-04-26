@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../context/AuthContext';
+import { api } from '../lib/api';
 import Mascot from '../components/Mascot';
 import './Pages.css';
 import './EmotionChart.css';
@@ -31,8 +30,7 @@ const EMOTION_COLORS = {
 const EMOTION_KEYS = Object.keys(EMOTION_COLORS);
 
 function EmotionChartPage() {
-  const { t, i18n } = useTranslation();
-  const { user } = useAuth();
+  const { t } = useTranslation();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [emotionData, setEmotionData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -51,40 +49,29 @@ function EmotionChartPage() {
 
   const fetchEmotionData = useCallback(async () => {
     setLoading(true);
-    const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const endOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-
-    const { data, error } = await supabase
-      .from('diaries')
-      .select('emotion')
-      .eq('user_id', user.id)
-      .gte('created_at', startOfMonth.toISOString())
-      .lte('created_at', endOfMonth.toISOString());
-
-    if (error) {
-      console.error('Error fetching emotion data:', error);
-      setEmotionData({});
-    } else {
-      const counts = {};
+    try {
+      const data = await api.getEmotionStats({
+        year: currentMonth.getFullYear(),
+        month: currentMonth.getMonth() + 1,
+      });
       const translationMap = EMOTION_KEYS.reduce((acc, key) => {
         acc[t(`emotion_${key}`)] = key;
         return acc;
       }, {});
-
-      data.forEach(entry => {
-        if (entry.emotion) {
-          entry.emotion.forEach(emo => {
-            const key = translationMap[emo] || (EMOTION_COLORS[emo] ? emo : null);
-            if (key) {
-              counts[key] = (counts[key] || 0) + 1;
-            }
-          });
+      const normalizedCounts = Object.entries(data.counts || {}).reduce((acc, [emotion, count]) => {
+        const key = translationMap[emotion] || (EMOTION_COLORS[emotion] ? emotion : null);
+        if (key) {
+          acc[key] = (acc[key] || 0) + count;
         }
-      });
-      setEmotionData(counts);
+        return acc;
+      }, {});
+      setEmotionData(normalizedCounts);
+    } catch (error) {
+      console.error('Error fetching emotion data:', error);
+      setEmotionData({});
     }
     setLoading(false);
-  }, [currentMonth, user.id, t]);
+  }, [currentMonth, t]);
 
   useEffect(() => {
     fetchEmotionData();

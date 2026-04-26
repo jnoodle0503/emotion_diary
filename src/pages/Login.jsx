@@ -1,51 +1,38 @@
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async"; // Import Helmet
-import { supabase } from "../lib/supabase";
 import Mascot from "../components/Mascot"; // "마음이" 캐릭터 import
-import { BASE_URL } from "../lib/domain";
 import { Link } from "react-router-dom"; // Import Link
+import { useAuth } from "../context/AuthContext";
 import "./Login.css"; // Import Login.css
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function Login() {
   const { t } = useTranslation(); // Initialize useTranslation
-  // Supabase Auth UI 테마 커스터마이징
-  const customTheme = {
-    ...ThemeSupa,
-    variables: {
-      ...ThemeSupa.variables, // 기존 variables를 스프레드
-      default: {
-        ...(ThemeSupa.variables?.default || {}), // default가 없을 경우 빈 객체 사용
-        colors: {
-          ...(ThemeSupa.variables?.default?.colors || {}), // colors가 없을 경우 빈 객체 사용
-          brand: "var(--color-primary)", // 기본 브랜드 색상
-          brandAccent: "var(--color-primary-light)", // 브랜드 강조 색상
-          brandButtonText: "#FFFFFF", // 버튼 텍스트 색상
-          defaultButtonBackground: "var(--color-surface)", // 기본 버튼 배경
-          defaultButtonBackgroundHover: "var(--color-border)", // 기본 버튼 호버 배경
-          defaultButtonBorder: "var(--color-border)", // 기본 버튼 테두리
-          defaultButtonText: "var(--color-text-primary)", // 기본 버튼 텍스트
-          inputBackground: "var(--color-surface)", // 입력 필드 배경
-          inputBorder: "var(--color-border)", // 입력 필드 테두리
-          inputBorderHover: "var(--color-primary)", // 입력 필드 테두리 호버
-          inputBorderFocus: "var(--color-primary)", // 입력 필드 테두리 포커스
-          inputText: "var(--color-text-primary)", // 입력 필드 텍스트
-          inputLabel: "var(--color-text-secondary)", // 입력 필드 라벨
-          inputPlaceholder: "var(--color-text-secondary)", // 입력 필드 플레이스홀더
-          messageText: "var(--color-text-primary)", // 메시지 텍스트
-          messageBackground: "var(--color-primary-light)", // 메시지 배경
-          messageBorder: "var(--color-primary)", // 메시지 테두리
-          anchorText: "var(--color-primary)", // 링크 텍스트
-          anchorTextHover: "var(--color-primary)", // 링크 텍스트 호버
-        },
-      },
-    },
-    radii: {
-      ...(ThemeSupa.radii || {}), // radii가 없을 경우 빈 객체 사용
-      borderRadiusButton: "8px", // 버튼 모서리 둥글기
-      borderRadiusInput: "8px", // 입력 필드 모서리 둥글기
-    },
+  const { signIn, register } = useAuth();
+  const [mode, setMode] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setSubmitting(true);
+
+    try {
+      if (mode === "register") {
+        await register({ email, password, nickname });
+      } else {
+        await signIn({ email, password });
+      }
+    } catch (err) {
+      console.error("Auth failed:", err);
+      setError(err.message || "로그인 처리 중 오류가 발생했습니다.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -118,23 +105,60 @@ function Login() {
         {t('experience_demo')}
       </Link>
       <div className="auth-ui-container">
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: customTheme }}
-          providers={["google"]}
-          onlyThirdPartyProviders={true}
-          redirectTo={BASE_URL}
-          queryParams={{
-            prompt: 'select_account',
-          }}
-          localization={{
-            variables: {
-              sign_in: {
-                social_provider_text: t('login_with_provider'),
-              },
-            },
-          }}
-        />
+        <div className="auth-mode-tabs" aria-label="로그인 방식">
+          <button
+            type="button"
+            className={mode === "login" ? "active" : ""}
+            onClick={() => setMode("login")}
+          >
+            로그인
+          </button>
+          <button
+            type="button"
+            className={mode === "register" ? "active" : ""}
+            onClick={() => setMode("register")}
+          >
+            회원가입
+          </button>
+        </div>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <label>
+            이메일
+            <input
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              required
+            />
+          </label>
+          <label>
+            비밀번호
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete={mode === "register" ? "new-password" : "current-password"}
+              minLength={8}
+              required
+            />
+          </label>
+          {mode === "register" && (
+            <label>
+              닉네임
+              <input
+                type="text"
+                value={nickname}
+                onChange={(event) => setNickname(event.target.value)}
+                autoComplete="nickname"
+              />
+            </label>
+          )}
+          {error && <p className="login-error">{error}</p>}
+          <button type="submit" disabled={submitting}>
+            {submitting ? "처리 중..." : mode === "register" ? "회원가입" : "로그인"}
+          </button>
+        </form>
       </div>
     </div>
   );
