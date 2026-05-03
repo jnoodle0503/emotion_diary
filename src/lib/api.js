@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
 async function apiRequest(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -56,5 +56,9 @@ export const api = {
 
   getEmotionStats: ({ year, month }) => (
     apiRequest(`/stats/emotions?year=${year}&month=${month}`)
+  ),
+
+  generateAIContent: (prompt) => (
+    apiRequest('/ai/generate', { method: 'POST', body: { prompt } })
   ),
 };
