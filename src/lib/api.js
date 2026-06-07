@@ -1,4 +1,53 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api-emotion-diary.jnoodle-nas.synology.me/api';
+const API_ORIGIN = new URL(API_BASE_URL).origin;
+
+export function getApiAssetUrl(path) {
+  if (!path) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  const apiUrl = new URL(API_BASE_URL, window.location.origin);
+  return new URL(path, apiUrl.origin).toString();
+}
+
+export function getStickerAssetUrl(pathOrFileName) {
+  if (!pathOrFileName) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(pathOrFileName)) {
+    const url = new URL(pathOrFileName);
+
+    if (url.pathname.startsWith('/api/stickers/files/')) {
+      return new URL(url.pathname, API_ORIGIN).toString();
+    }
+
+    return pathOrFileName;
+  }
+
+  if (pathOrFileName.startsWith('/api/stickers/files/')) {
+    return new URL(pathOrFileName, API_ORIGIN).toString();
+  }
+
+  return `${API_BASE_URL}/stickers/files/${encodeURIComponent(pathOrFileName)}`;
+}
+
+export function getStickerAssetCandidates(pathOrFileName) {
+  const fileName = String(pathOrFileName ?? '').split('/').pop();
+
+  if (!fileName) {
+    return [];
+  }
+
+  return [
+    getStickerAssetUrl(pathOrFileName),
+    `${API_BASE_URL}/stickers/files/${encodeURIComponent(fileName)}`,
+  ].filter((url, index, urls) => url && urls.indexOf(url) === index);
+}
 
 async function apiRequest(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -69,6 +118,21 @@ export const api = {
   getEmotionStats: ({ year, month }) => (
     apiRequest(`/stats/emotions?year=${year}&month=${month}`)
   ),
+
+  getStickers: async () => {
+    const response = await fetch(`${API_BASE_URL}/stickers`);
+    if (!response.ok) {
+      throw new Error('Sticker API request failed.');
+    }
+
+    const stickers = await response.json();
+    return Array.isArray(stickers)
+      ? stickers.map((sticker) => ({
+          ...sticker,
+          url: getStickerAssetUrl(sticker.url || sticker.file_name || sticker.sticker_file_name),
+        }))
+      : [];
+  },
 
   getVapidPublicKey: () => apiRequest('/notifications/vapid-public-key'),
   savePushSubscription: (subscription) => (

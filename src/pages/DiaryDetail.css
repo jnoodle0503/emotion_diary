@@ -8,3 +8,35 @@
 .diary-detail-page .diary-item-display {
   margin-bottom: 0; /* Remove bottom margin if it's the only item */
 }
+
+.diary-sticker-preview {
+  position: relative;
+  min-height: 360px;
+  padding: 2rem 1rem;
+  border: 1px solid rgba(75, 138, 116, 0.08);
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  text-align: center;
+}
+
+.diary-sticker-preview .diary-content {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.diary-sticker-preview-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.diary-preview-sticker {
+  position: absolute;
+  display: block;
+  height: auto;
+  user-select: none;
+}

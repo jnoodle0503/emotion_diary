@@ -1,12 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { api } from "../lib/api";
+import { api, getStickerAssetCandidates } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import ComfortNoteButton from "../components/ComfortNoteButton";
 import Mascot from "../components/Mascot";
 import "./Pages.css";
 import "./DiaryDetail.css";
 import { useTranslation } from 'react-i18next';
+
+function StickerPreviewImage({ sticker }) {
+  const candidates = getStickerAssetCandidates(sticker.url || sticker.sticker_file_name);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+
+  useEffect(() => {
+    setCandidateIndex(0);
+  }, [sticker.url, sticker.sticker_file_name]);
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return (
+    <img
+      className="diary-preview-sticker"
+      src={candidates[candidateIndex]}
+      alt=""
+      style={{
+        left: `${sticker.x_percent}%`,
+        top: `${sticker.y_percent}%`,
+        width: `${sticker.width_percent}%`,
+        transform: `translate(-50%, -50%) rotate(${sticker.rotation || 0}deg)`,
+        zIndex: sticker.z_index,
+      }}
+      draggable="false"
+      onError={() => {
+        setCandidateIndex((index) => Math.min(index + 1, candidates.length - 1));
+      }}
+    />
+  );
+}
 
 function DiaryDetail() {
   const { t, i18n } = useTranslation(); // Get i18n instance
@@ -97,7 +129,17 @@ function DiaryDetail() {
                 </span>
               ))}
           </div>
-          <p className="diary-content">{diary.content}</p>
+          <div className="diary-sticker-preview">
+            <p className="diary-content">{diary.content}</p>
+            <div className="diary-sticker-preview-layer" aria-hidden="true">
+              {(diary.stickers || []).map((sticker) => (
+                <StickerPreviewImage
+                  key={sticker.id || `${sticker.sticker_file_name}-${sticker.z_index}`}
+                  sticker={sticker}
+                />
+              ))}
+            </div>
+          </div>
           {diary.ai_feedback && (
             <div className="ai-feedback">
               <p className="ai-character-name">

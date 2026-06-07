@@ -47,12 +47,18 @@ export async function syncPushSubscription({ requestPermission = false } = {}) {
 }
 
 async function waitForServiceWorkerRegistration() {
-  return Promise.race([
+  const readyRegistration = await Promise.race([
     navigator.serviceWorker.ready,
     new Promise((resolve) => {
-      window.setTimeout(() => resolve(null), 2500);
+      window.setTimeout(() => resolve(null), 10000);
     }),
   ]);
+
+  if (readyRegistration) {
+    return readyRegistration;
+  }
+
+  return navigator.serviceWorker.getRegistration();
 }
 
 async function getValidSubscription(registration, existingSubscription, applicationServerKey) {
