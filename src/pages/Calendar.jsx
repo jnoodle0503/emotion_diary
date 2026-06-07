@@ -4,6 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
+import ComfortNoteButton from "../components/ComfortNoteButton";
 import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils";
 import "./Pages.css";
@@ -107,6 +108,14 @@ function CalendarPage() {
     }
   };
 
+  const handleDiaryUpdated = (updatedDiary) => {
+    setMonthlyDiaries((prevDiaries) =>
+      prevDiaries.map((diary) =>
+        diary.id === updatedDiary.id ? updatedDiary : diary
+      )
+    );
+  };
+
   const tileContent = ({ date, view }) => {
     if (view === "month") {
       const diaryForDay = monthlyDiaries.find((diary) => {
@@ -183,6 +192,10 @@ function CalendarPage() {
                             <p className="ai-feedback-text">{diary.ai_feedback}</p>
                           </div>
                         )}
+                        <ComfortNoteButton
+                          diary={diary}
+                          onDiaryUpdated={handleDiaryUpdated}
+                        />
                       </div>
                       <div className="diary-actions">
                         <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(`/write/${diary.id}`); }} className="edit-link">

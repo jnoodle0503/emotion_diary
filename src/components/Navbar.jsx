@@ -18,7 +18,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <NavLink to="/" className="nav-logo" onClick={closeMobileMenu}>
+        <NavLink to="/calendar" className="nav-logo" onClick={closeMobileMenu}>
           Marden
         </NavLink>
 

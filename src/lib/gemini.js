@@ -43,6 +43,6 @@ export async function getAIFeedback(diaryText, characterName, i18nInstance) {
     return await generateContent(prompt);
   } catch (error) {
     console.error("Error generating AI feedback:", error);
-    return "AI 피드백을 생성하는 중에 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+    return "정원 손님의 쪽지를 준비하는 중에 문제가 생겼어요. 잠시 후 다시 시도해주세요.";
   }
 }

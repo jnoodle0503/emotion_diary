@@ -1,0 +1,80 @@
+.ai-feedback-detail-page .garden-header {
+  margin-bottom: 24px;
+}
+
+.ai-feedback-panel {
+  border: 1px solid #e6dcc8;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+.ai-feedback-panel h3 {
+  color: #4a3f35;
+  font-size: 1.05rem;
+  margin: 0 0 14px;
+}
+
+.diary-panel {
+  background: #ffffff;
+}
+
+.ai-reply-panel {
+  background: #fffdf7;
+}
+
+.ai-feedback-diary-text {
+  color: #4a3f35;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 14px 0 0;
+  white-space: pre-wrap;
+}
+
+.ai-feedback-detail-text,
+.ai-feedback-pending {
+  color: #4a3f35;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.ai-feedback-reactions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.reaction-button {
+  border: 1px solid #d5c9b7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4a3f35;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px 16px;
+}
+
+.reaction-button.selected {
+  background: #4b8a74;
+  border-color: #4b8a74;
+  color: #ffffff;
+}
+
+.reaction-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (max-width: 560px) {
+  .ai-feedback-panel {
+    padding: 18px;
+  }
+
+  .ai-feedback-reactions {
+    flex-direction: column;
+  }
+}

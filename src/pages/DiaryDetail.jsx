@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
+import ComfortNoteButton from "../components/ComfortNoteButton";
 import Mascot from "../components/Mascot";
 import "./Pages.css";
 import "./DiaryDetail.css";
@@ -105,6 +106,7 @@ function DiaryDetail() {
               <p className="ai-feedback-text">{diary.ai_feedback}</p>
             </div>
           )}
+          <ComfortNoteButton diary={diary} onDiaryUpdated={setDiary} />
         </div>
         <div className="diary-actions">
           <Link to={`/write/${diary.id}`} className="edit-link">

@@ -159,6 +159,48 @@
   white-space: pre-wrap;
 }
 
+.comfort-note-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.comfort-note-guide {
+  color: var(--color-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.comfort-note-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(75, 138, 116, 0.45);
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-main);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.comfort-note-button:hover:not(:disabled) {
+  background: #3e7462;
+  transform: translateY(-1px);
+}
+
+.comfort-note-button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
 /* --- Common Diary Item Styles --- */
 .diary-item-display {
   background: var(--color-surface);

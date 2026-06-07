@@ -10,7 +10,7 @@ body {
 }
 
 main {
-  padding: 1rem;
+  padding: 0;
 }
 
 /* Remove default App container styles if they exist */

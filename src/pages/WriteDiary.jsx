@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import Mascot from '../components/Mascot';
-import FeedbackModal from '../components/FeedbackModal';
-import { getAIFeedback, generateAndTranslateCharacterName } from '../lib/gemini';
 import './Pages.css';
 import './WriteDiary.css';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +11,21 @@ const EMOTIONS = {
   'sadness': '😢', 'depression': '😞', 'anger': '😠', 'anxiety': '😟',
   'love': '❤️', 'surprise': '😮', 'boredom': '😴', 'tiredness': '😩'
 };
+
+function createDateWithCurrentTime(dateString) {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const now = new Date();
+
+  return new Date(
+    year,
+    month - 1,
+    day,
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+    now.getMilliseconds(),
+  );
+}
 
 function WriteDiary() {
   const { t, i18n } = useTranslation();
@@ -27,13 +40,10 @@ function WriteDiary() {
   const isEditing = !!diaryId;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [aiFeedback, setAIFeedback] = useState('');
-  const [feedbackCharacter, setFeedbackCharacter] = useState('');
-  const [feedbackCharacterNames, setFeedbackCharacterNames] = useState(null);
 
   const [existingFeedback, setExistingFeedback] = useState(null);
   const [existingCharNames, setExistingCharNames] = useState(null);
+  const [existingFeedbackReaction, setExistingFeedbackReaction] = useState(null);
 
   useEffect(() => {
     if (isEditing) {
@@ -58,6 +68,7 @@ function WriteDiary() {
 
           setExistingFeedback(data.ai_feedback);
           setExistingCharNames(data.ai_character_names);
+          setExistingFeedbackReaction(data.ai_feedback_reaction);
         } catch (error) {
           console.error('Error fetching diary:', error);
           navigate('/calendar');
@@ -80,16 +91,17 @@ function WriteDiary() {
     );
   };
 
-  const handleFinalSave = async (feedbackToSave = null, characterNamesToSave = null) => {
+  const handleFinalSave = async (feedbackToSave = null, characterNamesToSave = null, feedbackReaction = null) => {
     const diaryData = { 
       content, 
       emotion: selectedEmotions,
       ai_feedback: feedbackToSave,
-      ai_character_names: characterNamesToSave
+      ai_character_names: characterNamesToSave,
+      ai_feedback_reaction: feedbackReaction,
     };
 
     if (!isEditing && preselectedDate) {
-      diaryData.created_at = preselectedDate + 'T12:00:00Z';
+      diaryData.created_at = createDateWithCurrentTime(preselectedDate).toISOString();
     }
 
     try {
@@ -97,6 +109,7 @@ function WriteDiary() {
         await api.updateDiary(diaryId, diaryData);
       } else {
         await api.createDiary(diaryData);
+        alert(t('write_diary_ai_notify_after_save'));
       }
       navigate('/calendar');
     } catch (error) {
@@ -113,34 +126,13 @@ function WriteDiary() {
     }
 
     if (isEditing) {
-      handleFinalSave(existingFeedback, existingCharNames);
+      handleFinalSave(existingFeedback, existingCharNames, existingFeedbackReaction);
       return;
     }
 
     setIsSubmitting(true);
-
-    const charNames = await generateAndTranslateCharacterName(i18n);
-    setFeedbackCharacterNames(charNames);
-
-    const currentLang = i18n.language;
-    const characterForPrompt = charNames[currentLang] || charNames.en;
-    setFeedbackCharacter(characterForPrompt);
-
-    const feedback = await getAIFeedback(content, characterForPrompt, i18n);
-    setAIFeedback(feedback);
-    
+    await handleFinalSave();
     setIsSubmitting(false);
-    setShowFeedbackModal(true);
-  };
-
-  const handleLike = () => {
-    handleFinalSave(aiFeedback, feedbackCharacterNames);
-    setShowFeedbackModal(false);
-  };
-
-  const handleDislike = () => {
-    handleFinalSave(null, null);
-    setShowFeedbackModal(false);
   };
 
   if (loading) {
@@ -148,8 +140,7 @@ function WriteDiary() {
   }
 
   return (
-    <>
-      <div className="page-container write-page-container">
+    <div className="page-container write-page-container">
         <header className="garden-header">
           <Mascot />
           <div className="greeting">
@@ -185,19 +176,11 @@ function WriteDiary() {
           <div className="form-actions">
             <button type="button" onClick={() => navigate('/calendar')} className="cancel-btn">{t('cancel')}</button>
             <button type="submit" className="submit-btn" disabled={isSubmitting}>
-              {isSubmitting ? t('write_diary_ai_reading') : (isEditing ? t('write_diary_edit_complete') : t('write_diary_record'))}
+              {isSubmitting ? t('write_diary_saving') : (isEditing ? t('write_diary_edit_complete') : t('write_diary_record'))}
             </button>
           </div>
         </form>
       </div>
-      <FeedbackModal 
-        show={showFeedbackModal}
-        feedback={aiFeedback}
-        characterName={feedbackCharacter}
-        onLike={handleLike}
-        onDislike={handleDislike}
-      />
-    </>
   );
 }
 

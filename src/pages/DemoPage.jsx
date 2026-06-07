@@ -233,25 +233,25 @@ function DemoPage() {
 
   return (
     <div className="page-container demo-page-container">
-      <Helmet>
-        <title>Marden - 마음 일기 | AI와 함께하는 감정 일기장</title>
-        <meta
-          name="description"
-          content="Marden은 당신의 하루를 기록하고 마음을 가꾸는 AI 감정 일기장입니다. 일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공하고, 감정 통계를 통해 자신의 마음을 더 잘 이해할 수 있습니다. 지금 무료로 체험해보세요."
-        />
-        <meta
-          name="keywords"
-          content="일기장, 감정일기, AI 일기, 마음 건강, 감정 관리, 정신 건강, 일기 앱, 감정 분석, 무료 일기장, Marden"
-        />
-        <meta property="og:title" content="Marden - 마음 일기 | AI와 함께하는 감정 일기장" />
-        <meta
-          property="og:description"
-          content="일기를 쓰면 AI 캐릭터가 따뜻한 피드백을 제공합니다. 감정 통계로 나의 마음을 더 잘 이해해보세요."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://marden-diary.vercel.app/" />
-        <link rel="canonical" href="https://marden-diary.vercel.app/" />
-      </Helmet>
+        <Helmet>
+          <title>Marden - 마음 일기 | 오늘의 마음을 돌아보는 감정 일기장</title>
+          <meta
+            name="description"
+            content="Marden은 오늘의 마음을 기록하고 나만의 마음 정원을 천천히 가꾸는 감정 일기장입니다. 원한다면 정원 손님이 오늘의 마음 곁에 작은 위로 쪽지를 남겨드립니다."
+          />
+          <meta
+            name="keywords"
+            content="일기장, 감정일기, 마음 기록, 마음 건강, 감정 관리, 정신 건강, 일기 앱, 감정 기록, 무료 일기장, Marden"
+          />
+          <meta property="og:title" content="Marden - 마음 일기 | 오늘의 마음을 돌아보는 감정 일기장" />
+          <meta
+            property="og:description"
+            content="오늘의 마음을 정원에 심고, 필요한 날 작은 위로 쪽지를 받아보세요."
+          />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://emotion-diary.jnoodle-nas.synology.me/" />
+          <link rel="canonical" href="https://emotion-diary.jnoodle-nas.synology.me/" />
+        </Helmet>
 
       <header className="demo-header">
         <div className="mascot-container">
@@ -261,24 +261,32 @@ function DemoPage() {
         <p>{t('marden_description_1')}</p>
         <p>{t('marden_description_2')}</p>
 
-        {/* SEO를 위한 추가 텍스트 콘텐츠 */}
-        <div className="seo-content" style={{ marginTop: '2rem', lineHeight: '1.8' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>
-            Marden으로 마음 건강을 챙기세요
-          </h2>
-          <p style={{ marginBottom: '1rem' }}>
-            Marden은 단순한 일기장이 아닙니다. 당신의 감정을 이해하고 공감하는 AI 친구와 함께
-            하루를 돌아보며 마음을 가꿀 수 있는 특별한 공간입니다. 매일 일기를 쓰는 것만으로도
-            자신의 감정을 더 잘 이해하고, 스트레스를 관리하며, 정신 건강을 증진시킬 수 있습니다.
-          </p>
-          <p style={{ marginBottom: '1rem' }}>
-            일기를 작성하면 중세 시대의 무법자, 미래에서 온 로봇 등 다양한 AI 캐릭터들이
-            당신만의 스타일로 따뜻한 위로와 조언을 전해드립니다. 캘린더를 통해 과거의 감정을
-            되돌아보고, 감정 통계 차트로 나의 감정 패턴을 한눈에 파악할 수 있습니다.
-          </p>
-          <p style={{ marginBottom: '1rem' }}>
-            지금 바로 Marden을 시작하고, 더 건강하고 행복한 마음으로 하루를 살아가세요.
-            회원가입은 구글 계정으로 간편하게 가능하며, 모든 일기는 안전하게 암호화되어 보관됩니다.
+        <div className="intro-summary" aria-label="Marden 서비스 흐름">
+          <div className="intro-summary-head">
+            <span className="intro-kicker">마음 정원의 흐름</span>
+            <h2>오늘의 마음을 심고, 천천히 돌아볼 수 있어요.</h2>
+          </div>
+
+          <div className="intro-flow">
+            <article className="intro-flow-item">
+              <span className="intro-step">1</span>
+              <h3>마음 씨앗 심기</h3>
+              <p>오늘 있었던 일과 감정을 편하게 적어요.</p>
+            </article>
+            <article className="intro-flow-item">
+              <span className="intro-step">2</span>
+              <h3>위로 쪽지 부탁하기</h3>
+              <p>원한다면 정원 손님에게 작은 쪽지를 부탁해요.</p>
+            </article>
+            <article className="intro-flow-item">
+              <span className="intro-step">3</span>
+              <h3>마음 정원 돌아보기</h3>
+              <p>달력과 차트로 마음의 변화를 한눈에 확인해요.</p>
+            </article>
+          </div>
+
+          <p className="intro-note">
+            위로 쪽지는 사용자가 요청한 경우에만 준비되며, 이 과정에는 인공지능 기술이 활용됩니다.
           </p>
         </div>
       </header>
@@ -464,18 +472,12 @@ function DemoPage() {
         style={{ display: 'block', margin: '2rem auto', textAlign: 'center' }}
       />
 
-      {/* Call to Action */}
-      <section className="demo-section demo-cta">
-        <h2>{t('cta_title')}</h2>
-        <p>
-          {t('cta_description')}
-        </p>
-        <br />
-        <Link to="/login" className="cta-button">
+        <div className="demo-sticky-cta">
+          <Link to="/auth" className="cta-button">
           <Mascot />
           {t('start_marden')}
-        </Link>
-      </section>
+          </Link>
+        </div>
     </div>
   );
 }

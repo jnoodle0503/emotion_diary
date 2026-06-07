@@ -53,9 +53,29 @@ export const api = {
   createDiary: (payload) => apiRequest('/diaries', { method: 'POST', body: payload }),
   updateDiary: (id, payload) => apiRequest(`/diaries/${id}`, { method: 'PATCH', body: payload }),
   deleteDiary: (id) => apiRequest(`/diaries/${id}`, { method: 'DELETE' }),
+  requestComfortNote: (id, payload) => (
+    apiRequest(`/diaries/${id}/comfort-note`, {
+      method: 'POST',
+      body: payload,
+    })
+  ),
+  updateAiFeedbackReaction: (id, reaction) => (
+    apiRequest(`/diaries/${id}`, {
+      method: 'PATCH',
+      body: { ai_feedback_reaction: reaction },
+    })
+  ),
 
   getEmotionStats: ({ year, month }) => (
     apiRequest(`/stats/emotions?year=${year}&month=${month}`)
+  ),
+
+  getVapidPublicKey: () => apiRequest('/notifications/vapid-public-key'),
+  savePushSubscription: (subscription) => (
+    apiRequest('/notifications/push-subscriptions', {
+      method: 'POST',
+      body: subscription,
+    })
   ),
 
   generateAIContent: (prompt) => (

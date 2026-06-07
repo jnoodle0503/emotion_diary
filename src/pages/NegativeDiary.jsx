@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { api } from "../lib/api";
+import ComfortNoteButton from "../components/ComfortNoteButton";
 import Mascot from "../components/Mascot";
 import { truncateText } from "../lib/textUtils";
 import "./Pages.css";
@@ -107,6 +108,14 @@ function NegativeDiaryPage() {
     }
   };
 
+  const handleDiaryUpdated = (updatedDiary) => {
+    setDiaries((prevDiaries) =>
+      prevDiaries.map((diary) =>
+        diary.id === updatedDiary.id ? updatedDiary : diary
+      )
+    );
+  };
+
   const getCharacterNameForDisplay = (diary) => {
     const currentLang = i18n.language;
     const fallbackLang = currentLang === 'ko' ? 'en' : 'ko';
@@ -177,6 +186,11 @@ function NegativeDiaryPage() {
                     <p className="ai-feedback-text">{diary.ai_feedback}</p>
                   </div>
                 )}
+
+                <ComfortNoteButton
+                  diary={diary}
+                  onDiaryUpdated={handleDiaryUpdated}
+                />
               </div>
             );
           })

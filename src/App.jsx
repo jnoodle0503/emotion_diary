@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { syncPushSubscription } from './lib/notifications';
 import CalendarPage from './pages/Calendar';
 import MyPage from './pages/MyPage';
 import NegativeDiaryPage from './pages/NegativeDiary';
@@ -7,10 +9,13 @@ import EmotionChartPage from './pages/EmotionChart';
 import WriteDiary from './pages/WriteDiary';
 import ErrorPage from './pages/ErrorPage';
 import Login from './pages/Login';
+import AuthPage from './pages/AuthPage';
 import DemoPage from './pages/DemoPage'; // Import DemoPage
 import Navbar from './components/Navbar';
+import PublicNavbar from './components/PublicNavbar';
 import NicknameRegistration from './pages/NicknameRegistration';
 import DiaryDetail from './pages/DiaryDetail'; // New import
+import AiFeedbackDetail from './pages/AiFeedbackDetail';
 import './App.css';
 
 // 로그인한 사용자만 접근할 수 있는 보호된 라우트 컴포넌트
@@ -24,7 +29,7 @@ function ProtectedRoute({ children }) {
 
   // If no session, redirect to login
   if (!session) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   // If user is logged in but profile or nickname is missing, redirect to nickname registration
@@ -45,19 +50,34 @@ function ProtectedRoute({ children }) {
 function App() {
   const { session, profile } = useAuth();
 
+  useEffect(() => {
+    if (!session || !profile?.nickname) {
+      return;
+    }
+
+    void syncPushSubscription().catch((error) => {
+      console.warn('Push subscription sync failed:', error);
+    });
+  }, [session, profile]);
+
   return (
     <div className="App">
       {/* Navbar is only shown for fully logged-in users */}
       {(session && profile && profile.nickname) && <Navbar />}
+      {!session && <PublicNavbar />}
 
       <main>
         <Routes>
           {/* DemoPage is now the main landing page */}
-          <Route path="/" element={<DemoPage />} />
+          <Route path="/" element={session ? <Navigate to="/calendar" replace /> : <DemoPage />} />
           
           <Route 
             path="/login" 
             element={session ? <Navigate to="/calendar" replace /> : <Login />}
+          />
+          <Route
+            path="/auth"
+            element={session ? <Navigate to="/calendar" replace /> : <AuthPage />}
           />
           {/* Nickname registration page - NOT protected */}
           <Route path="/register-nickname" element={<NicknameRegistration />} /> 
@@ -93,6 +113,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DiaryDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ai-feedback/:id"
+            element={
+              <ProtectedRoute>
+                <AiFeedbackDetail />
               </ProtectedRoute>
             }
           />
